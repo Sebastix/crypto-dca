@@ -34,11 +34,11 @@ class Bl3pWithdrawService implements WithdrawServiceInterface
         return new CompletedWithdraw($addressToWithdrawTo, $netAmountToWithdraw, $response['data']['id']);
     }
 
-    public function getAvailableBalance(): int
+    public function getAvailableBalance(string $assetToWithdraw = 'BTC'): float
     {
         $response = $this->client->apiCall('GENMKT/money/info');
 
-        return (int) ($response['data']['wallets']['BTC']['available']['value_int'] ?? 0);
+        return (int) ($response['data']['wallets'][$assetToWithdraw]['available']['value_int'] ?? 0);
     }
 
     public function getWithdrawFeeInSatoshis(): int

@@ -6,6 +6,7 @@ namespace Jorijn\Bitcoin\Dca\Command;
 
 use Jorijn\Bitcoin\Dca\Service\WithdrawService;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,6 +26,7 @@ class WithdrawCommand extends Command
     public function configure(): void
     {
         $this
+            ->addArgument('asset', InputArgument::REQUIRED, 'The asset to be withdrawn')
             ->addOption(
                 'all',
                 'a',
@@ -59,7 +61,21 @@ class WithdrawCommand extends Command
             return 1;
         }
 
-        $balanceToWithdraw = $this->withdrawService->getBalance($input->getOption('tag'));
+        $assetToWithdraw = (string) $input->getArgument('asset');
+        // TODO check if this a valid token which can be bought on the exchange
+        if ($assetToWithdraw === '') {
+          $io->error('Asset must be set as an argument');
+          return 1;
+        }
+
+        if (ctype_upper($assetToWithdraw) === false) {
+          $io->error('Asset string must be a uppercase string e.g. BTC for Bitcoin');
+          return 1;
+        }
+
+        $balanceToWithdraw = $this->withdrawService->getBalance($assetToWithdraw, $input->getOption('tag'));
+        var_dump($balanceToWithdraw);
+        exit;
         $addressToWithdrawTo = $this->withdrawService->getRecipientAddress();
 
         if (0 === $balanceToWithdraw) {

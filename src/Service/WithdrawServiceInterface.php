@@ -10,7 +10,7 @@ interface WithdrawServiceInterface
 {
     public function withdraw(int $balanceToWithdraw, string $addressToWithdrawTo): CompletedWithdraw;
 
-    public function getAvailableBalance(): int;
+    public function getAvailableBalance(string $assetToWithdraw): float;
 
     public function getWithdrawFeeInSatoshis(): int;
 

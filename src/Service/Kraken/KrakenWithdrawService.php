@@ -25,9 +25,11 @@ class KrakenWithdrawService implements WithdrawServiceInterface
         // TODO
     }
 
-    public function getAvailableBalance(): int
+    public function getAvailableBalance(string $assetToWithdraw): float
     {
-        // TODO
+      $balanceInfo = $this->client->queryPrivate('Balance');
+
+      return (float) $balanceInfo[$assetToWithdraw];
     }
 
     public function getWithdrawFeeInSatoshis(): int

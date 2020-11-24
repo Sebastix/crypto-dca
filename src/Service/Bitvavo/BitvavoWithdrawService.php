@@ -37,11 +37,11 @@ class BitvavoWithdrawService implements WithdrawServiceInterface
         return new CompletedWithdraw($addressToWithdrawTo, $netAmountToWithdraw, (string) time());
     }
 
-    public function getAvailableBalance(): int
+    public function getAvailableBalance(string $assetToWithdraw): float
     {
-        $response = $this->client->apiCall('balance', 'GET', [self::SYMBOL => 'BTC']);
+        $response = $this->client->apiCall('balance', 'GET', [self::SYMBOL => $assetToWithdraw]);
 
-        if (!isset($response[0]) || 'BTC' !== $response[0][self::SYMBOL]) {
+        if (!isset($response[0]) || $assetToWithdraw !== $response[0][self::SYMBOL]) {
             return 0;
         }
 

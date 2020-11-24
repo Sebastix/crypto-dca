@@ -79,9 +79,9 @@ class WithdrawService
         }
     }
 
-    public function getBalance(string $tag = null): int
+    public function getBalance(string $assetToWithdraw, string $tag = null): float
     {
-        $maxAvailableBalance = $this->getActiveService()->getAvailableBalance();
+        $maxAvailableBalance = $this->getActiveService()->getAvailableBalance($assetToWithdraw);
 
         if ($tag) {
             $tagBalance = $this->balanceRepository->get($tag);
