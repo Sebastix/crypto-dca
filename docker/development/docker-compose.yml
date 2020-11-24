@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  dev_dca:
+    build:
+      context: ../../
+      dockerfile: docker/development/Dockerfile
+    container_name: dca_php
+    volumes:
+    - ./.env:/app/.env
+    working_dir: /app/
+    tty: true
