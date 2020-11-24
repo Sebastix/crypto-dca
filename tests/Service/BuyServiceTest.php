@@ -74,6 +74,7 @@ final class BuyServiceTest extends TestCase
     {
         $buyOrderDTO = new CompletedBuyOrder();
         $amount = random_int(1000, 2000);
+        $asset = 'XBT';
         $orderId = 'oid'.random_int(1000, 2000);
         $start = time();
         $tag = 'tag'.random_int(1000, 2000);
@@ -81,7 +82,7 @@ final class BuyServiceTest extends TestCase
         $this->supportedService
             ->expects(static::once())
             ->method('initiateBuy')
-            ->with($amount)
+            ->with($amount, $asset)
             ->willReturnCallback(static function () use ($orderId, $buyOrderDTO, $buyFillsAfter) {
                 if (0 === $buyFillsAfter) {
                     return $buyOrderDTO;
@@ -130,7 +131,7 @@ final class BuyServiceTest extends TestCase
             ;
         }
 
-        static::assertSame($buyOrderDTO, $this->service->buy($amount, $tag));
+        static::assertSame($buyOrderDTO, $this->service->buy($amount, $asset, $tag));
     }
 
     /**
@@ -157,6 +158,6 @@ final class BuyServiceTest extends TestCase
         $this->logger->expects(static::atLeastOnce())->method('error');
         $this->expectException(NoExchangeAvailableException::class);
 
-        $localService->buy(10);
+        $localService->buy(10, 'BTC');
     }
 }

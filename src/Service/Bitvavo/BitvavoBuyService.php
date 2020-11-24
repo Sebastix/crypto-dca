@@ -18,6 +18,7 @@ class BitvavoBuyService implements BuyServiceInterface
     private const SATOSHIS_IN_A_BITCOIN = '100000000';
 
     protected BitvavoClientInterface $client;
+    protected string $assetToBuy;
     protected string $baseCurrency;
     protected string $tradingPair;
 
@@ -33,10 +34,10 @@ class BitvavoBuyService implements BuyServiceInterface
         return 'bitvavo' === $exchange;
     }
 
-    public function initiateBuy(int $amount): CompletedBuyOrder
+    public function initiateBuy(int $amount, string $asset): CompletedBuyOrder
     {
         $orderInfo = $this->client->apiCall(self::ORDER, 'POST', [], [
-            self::MARKET => $this->tradingPair,
+            self::MARKET => $asset.'-'.$this->baseCurrency,
             'side' => 'buy',
             'orderType' => self::MARKET,
             'amountQuote' => (string) $amount,

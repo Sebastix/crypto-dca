@@ -29,6 +29,7 @@ class BuyCommand extends Command
     {
         $this
             ->addArgument('amount', InputArgument::REQUIRED, 'The amount of base currency to use for the BUY order')
+            ->addArgument('asset', InputArgument::REQUIRED, 'The asset to be bought for the BUY order')
             ->addOption(
                 'yes',
                 'y',
@@ -56,6 +57,18 @@ class BuyCommand extends Command
             return 1;
         }
 
+        $assetToBuy = (string) $input->getArgument('asset');
+        // TODO check if this a valid token which can be bought on the exchange
+        if ($assetToBuy === '') {
+          $io->error('Asset must be set as an argument');
+          return 1;
+        }
+
+        if (ctype_upper($assetToBuy) === false) {
+          $io->error('Asset string must be a uppercase string e.g. XBT for Bitcoin');
+          return 1;
+        }
+
         if (!$input->getOption('yes') && !$io->confirm(
             'Are you sure you want to place an order for '.$this->baseCurrency.' '.$amount.'?',
             false
@@ -64,7 +77,7 @@ class BuyCommand extends Command
         }
 
         try {
-            $orderInformation = $this->buyService->buy((int) $amount, $input->getOption('tag'));
+            $orderInformation = $this->buyService->buy((int) $amount, $assetToBuy, $input->getOption('tag'));
 
             $io->success(sprintf(
                 'Bought: %s, %s: %s, price: %s, spent fees: %s',

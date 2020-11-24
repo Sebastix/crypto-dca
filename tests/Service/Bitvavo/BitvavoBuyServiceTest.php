@@ -53,6 +53,7 @@ final class BitvavoBuyServiceTest extends TestCase
     public function testInitiateBuySucceedsDirectly(): void
     {
         $amount = random_int(10, 20);
+        $asset = "BTC";
 
         [
             self::DATA => $data,
@@ -75,7 +76,7 @@ final class BitvavoBuyServiceTest extends TestCase
             ->willReturn($data)
         ;
 
-        $responseDTO = $this->service->initiateBuy($amount);
+        $responseDTO = $this->service->initiateBuy($amount, $asset);
 
         static::assertSame($filledSatoshis, $responseDTO->getAmountInSatoshis());
         static::assertSame($filledQuote.' '.$this->baseCurrency, $responseDTO->getDisplayAmountSpent());
@@ -105,7 +106,7 @@ final class BitvavoBuyServiceTest extends TestCase
 
         $this->expectExceptionObject(new PendingBuyOrderException($orderId));
 
-        $this->service->initiateBuy(1);
+        $this->service->initiateBuy(1, 'BTC');
     }
 
     /**
@@ -194,6 +195,7 @@ final class BitvavoBuyServiceTest extends TestCase
     public function testFeesAreAccountedInBitcoin(): void
     {
         $amount = random_int(10, 20);
+        $asset = 'BTC';
 
         [
             self::DATA => $data,
@@ -207,7 +209,7 @@ final class BitvavoBuyServiceTest extends TestCase
             ->willReturn($data)
         ;
 
-        $responseDTO = $this->service->initiateBuy($amount);
+        $responseDTO = $this->service->initiateBuy($amount, $asset);
 
         static::assertSame($feePaid * 100000000, $responseDTO->getFeesInSatoshis());
         static::assertSame($feePaid.' '.$feeCurrency, $responseDTO->getDisplayFeesSpent());

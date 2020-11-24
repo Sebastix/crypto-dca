@@ -23,6 +23,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 final class BuyCommandTest extends TestCase
 {
     public const AMOUNT = 'amount';
+    public const ASSET = 'asset';
     public const COMMAND = 'command';
 
     /** @var BuyService|MockObject */
@@ -57,6 +58,7 @@ final class BuyCommandTest extends TestCase
         $commandTester->execute([
             self::COMMAND => $this->command->getName(),
             self::AMOUNT => 'string'.random_int(1000, 2000),
+            self::ASSET => 'XBT'
         ]);
 
         static::assertStringContainsString('Amount should be numeric, e.g. 10', $commandTester->getDisplay(true));
@@ -69,13 +71,14 @@ final class BuyCommandTest extends TestCase
     public function testNotUnattendedAndNotConfirming(): void
     {
         $amount = random_int(1000, 2000);
+        $asset = "XBT";
 
         // not buying
         $this->buyService->expects(static::never())->method('buy');
 
         $commandTester = $this->createCommandTester();
         $commandTester->setInputs(['no']);
-        $commandTester->execute([self::COMMAND => $this->command->getName(), self::AMOUNT => $amount]);
+        $commandTester->execute([self::COMMAND => $this->command->getName(), self::AMOUNT => $amount, self::ASSET => $asset]);
 
         static::assertSame(0, $commandTester->getStatusCode());
     }
@@ -86,13 +89,14 @@ final class BuyCommandTest extends TestCase
      */
     public function testNotUnattendedAndConfirmsBuy(string $tag = null): void
     {
-        [$amount, $orderInformation] = $this->prepareBuyTest($tag);
+        [$amount, $asset, $orderInformation] = $this->prepareBuyTest($tag);
 
         $commandTester = $this->createCommandTester();
         $commandTester->setInputs(['yes']);
         $commandTester->execute([
             self::COMMAND => $this->command->getName(),
             self::AMOUNT => $amount,
+            self::ASSET => $asset,
         ] + (!empty($tag) ? ['--tag' => $tag] : []));
 
         static::assertSame(0, $commandTester->getStatusCode());
@@ -108,13 +112,14 @@ final class BuyCommandTest extends TestCase
 
     public function testUnattendedBuy(string $tag = null): void
     {
-        [$amount, $orderInformation] = $this->prepareBuyTest($tag);
+        [$amount, $asset, $orderInformation] = $this->prepareBuyTest($tag);
 
         $commandTester = $this->createCommandTester();
         $commandTester->execute([
             self::COMMAND => $this->command->getName(),
             self::AMOUNT => $amount,
             '--yes' => null,
+            self::ASSET => $asset,
         ] + (!empty($tag) ? ['--tag' => $tag] : []));
 
         static::assertSame(0, $commandTester->getStatusCode());
@@ -134,17 +139,18 @@ final class BuyCommandTest extends TestCase
     public function testBuyingFailsExceptionIsHandled(): void
     {
         $amount = random_int(1000, 2000);
+        $asset = "XBT";
         $exception = new BuyTimeoutException('error'.random_int(1000, 2000));
 
         $this->buyService
             ->expects(static::once())
             ->method('buy')
-            ->with($amount)
+            ->with($amount, $asset)
             ->willThrowException($exception)
         ;
 
         $commandTester = $this->createCommandTester();
-        $commandTester->execute([self::COMMAND => $this->command->getName(), self::AMOUNT => $amount, '--yes' => null]);
+        $commandTester->execute([self::COMMAND => $this->command->getName(), self::AMOUNT => $amount, self::ASSET => $asset, '--yes' => null]);
 
         static::assertSame(1, $commandTester->getStatusCode());
         static::assertStringContainsString('[ERROR] '.$exception->getMessage(), $commandTester->getDisplay(true));
@@ -164,6 +170,7 @@ final class BuyCommandTest extends TestCase
     protected function prepareBuyTest(?string $tag): array
     {
         $amount = random_int(1000, 2000);
+        $asset = "XBT";
 
         $orderInformation = (new CompletedBuyOrder())
             ->setDisplayAmountBought(random_int(1000, 2000).' BTC')
@@ -179,11 +186,11 @@ final class BuyCommandTest extends TestCase
         ;
 
         if (!empty($tag)) {
-            $invocationMocker->with($amount, $tag);
+            $invocationMocker->with($amount, $asset, $tag);
         } else {
-            $invocationMocker->with($amount);
+            $invocationMocker->with($amount, $asset);
         }
 
-        return [$amount, $orderInformation];
+        return [$amount, $asset, $orderInformation];
     }
 }

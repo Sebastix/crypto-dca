@@ -73,6 +73,7 @@ final class Bl3pBuyServiceTest extends TestCase
     public function testInitiateBuyFillsDirectly(string $feeCurrency): void
     {
         $amount = random_int(10, 20);
+        $asset = 'BTC';
         $orderId = 'oid'.random_int(1000, 2000);
 
         [
@@ -107,7 +108,7 @@ final class Bl3pBuyServiceTest extends TestCase
             ->willReturnOnConsecutiveCalls($this->getNewOrderResult($orderId), $closedResult)
         ;
 
-        $completedBuyDTO = $this->service->initiateBuy($amount);
+        $completedBuyDTO = $this->service->initiateBuy($amount, $asset);
 
         static::assertSame($amountBought, $completedBuyDTO->getAmountInSatoshis());
         static::assertSame($amountBoughtDisplayed, $completedBuyDTO->getDisplayAmountBought());
@@ -126,6 +127,7 @@ final class Bl3pBuyServiceTest extends TestCase
     public function testInitiateBuyButDoesNotFillDirectly(): void
     {
         $amount = random_int(10, 20);
+        $asset = 'BTC';
         $orderId = 'oid'.random_int(1000, 2000);
 
         $this->client
@@ -140,7 +142,7 @@ final class Bl3pBuyServiceTest extends TestCase
 
         $this->expectException(PendingBuyOrderException::class);
 
-        $this->service->initiateBuy($amount);
+        $this->service->initiateBuy($amount, $asset);
     }
 
     /**

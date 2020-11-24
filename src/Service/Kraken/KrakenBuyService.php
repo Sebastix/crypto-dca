@@ -16,13 +16,11 @@ class KrakenBuyService implements BuyServiceInterface
     protected string $lastUserRef;
     protected KrakenClientInterface $client;
     protected string $baseCurrency;
-    protected string $tradingPair;
 
     public function __construct(KrakenClientInterface $client, string $baseCurrency)
     {
         $this->client = $client;
         $this->baseCurrency = $baseCurrency;
-        $this->tradingPair = sprintf('XBT%s', $this->baseCurrency);
     }
 
     public function supportsExchange(string $exchange): bool
@@ -30,19 +28,41 @@ class KrakenBuyService implements BuyServiceInterface
         return 'kraken' === $exchange;
     }
 
-    public function initiateBuy(int $amount): CompletedBuyOrder
+  /**
+   * @param int $amount
+   * @param bool $simulate
+   *   Set this boolean to true to simulate an buy order - see https://support.kraken.com/hc/en-us/articles/360000919926-Does-Kraken-offer-an-API-test-environment-
+   *
+   * @return CompletedBuyOrder
+   * @throws PendingBuyOrderException
+   */
+    public function initiateBuy(int $amount, string $asset, bool $simulate = false): CompletedBuyOrder
     {
         // generate a 32-bit singed integer to track this order
         $this->lastUserRef = (string) random_int(0, 0x7FFFFFFF);
 
+        $assetInfo = $this->getAssetInfo($asset);
+        $volume = bcdiv((string) $amount, $this->getCurrentPrice($asset), $assetInfo['decimals']);
+        // Check minimum order amount
+        if ($volume < $this->getAssetPair($asset.$this->baseCurrency)['ordermin']) {
+          $requiredMinimum = bcmul($this->getAssetPair($asset.$this->baseCurrency)['ordermin'], $this->getCurrentPrice($asset), 2);
+          throw new KrakenClientException(sprintf('Your amount is too low. A minimum of %s %d is required.', $this->baseCurrency, ceil($requiredMinimum)));
+        }
+
         $addedOrder = $this->client->queryPrivate('AddOrder', [
-            'pair' => $this->tradingPair,
+            'pair' => $asset.$this->baseCurrency,
             'type' => 'buy',
             'ordertype' => 'market',
-            'volume' => bcdiv((string) $amount, $this->getCurrentPrice(), 8),
+            'volume' => $volume,
             'oflags' => 'fciq', // prefer fee in quote currency
             'userref' => $this->lastUserRef,
+            'validate' => $simulate
         ]);
+
+        // Output for a test order
+        if (isset($addedOrder['txid']) === false) {
+          throw new KrakenClientException(sprintf('Test buy order - %s', $addedOrder['descr']['order']));
+        }
 
         $orderId = $addedOrder['txid'][array_key_first($addedOrder['txid'])];
 
@@ -69,10 +89,26 @@ class KrakenBuyService implements BuyServiceInterface
         ]);
     }
 
-    protected function getCurrentPrice(): string
+    protected function getAssetInfo(string $asset){
+      $assetInfo = $this->client->queryPublic('Assets', [
+        'asset' => $asset
+      ]);
+
+      return $assetInfo[array_key_first($assetInfo)];
+    }
+
+    protected function getAssetPair(string $assetPair) {
+      $assetPairInfo = $this->client->queryPublic('AssetPairs', [
+        'pair' => $assetPair
+      ]);
+      
+      return $assetPairInfo[array_key_first($assetPairInfo)];
+    }
+
+    protected function getCurrentPrice(string $asset): string
     {
         $tickerInfo = $this->client->queryPublic('Ticker', [
-            'pair' => $this->tradingPair,
+            'pair' => $asset.$this->baseCurrency,
         ]);
 
         return $tickerInfo[array_key_first($tickerInfo)]['a'][0];
@@ -95,10 +131,10 @@ class KrakenBuyService implements BuyServiceInterface
             throw new KrakenClientException('no open orders left yet order was not found, you should investigate this');
         }
 
+        $pairInfo = $this->getAssetPair($orderInfo['pair']);
+
         return (new CompletedBuyOrder())
-            ->setAmountInSatoshis((int) bcmul($orderInfo['vol'], self::SATOSHIS_IN_A_BITCOIN, 8))
-            ->setFeesInSatoshis(0)
-            ->setDisplayAmountBought($orderInfo['vol'].' BTC')
+            ->setDisplayAmountBought($orderInfo['vol'].' '.$pairInfo['base'])
             ->setDisplayAmountSpent($orderInfo['cost'].' '.$this->baseCurrency)
             ->setDisplayAveragePrice($orderInfo['price'].' '.$this->baseCurrency)
             ->setDisplayFeesSpent($orderInfo['fee'].' '.$this->baseCurrency)

@@ -15,14 +15,17 @@ interface BuyServiceInterface
     public function supportsExchange(string $exchange): bool;
 
     /**
-     * Method should buy $amount of $baseCurrency in BTC. Should only return a CompletedBuyOrder object when the
+     * Method should buy $amount of $baseCurrency in given token. Should only return a CompletedBuyOrder object when the
      * (market) order was filled. Should throw PendingBuyOrderException if it is not filled yet.
      *
-     * @param int $amount the amount that should be bought
+     * @param int $amount
+     *  The amount that should be bought.
+     * @param string $asset
+     *  The asset to be bought.
      *
      * @throws PendingBuyOrderException
      */
-    public function initiateBuy(int $amount): CompletedBuyOrder;
+    public function initiateBuy(int $amount, string $asset): CompletedBuyOrder;
 
     /**
      * Method should check if the given $orderId is filled already. Should only return a CompletedBuyOrder object when

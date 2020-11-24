@@ -44,12 +44,12 @@ class Bl3pBuyService implements BuyServiceInterface
         return self::BL3P === $exchange;
     }
 
-    public function initiateBuy(int $amount): CompletedBuyOrder
+    public function initiateBuy(int $amount, string $asset): CompletedBuyOrder
     {
-        $result = $this->client->apiCall($this->tradingPair.'/money/order/add', [
+        $result = $this->client->apiCall($asset.$this->baseCurrency.'/money/order/add', [
             self::TYPE => 'bid',
             self::AMOUNT_FUNDS_INT => $amount * 100000,
-            self::FEE_CURRENCY => 'BTC',
+            self::FEE_CURRENCY => $asset,
         ]);
 
         return $this->checkIfOrderIsFilled((string) $result[self::DATA][self::ORDER_ID]);
