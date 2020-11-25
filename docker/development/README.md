@@ -21,14 +21,14 @@ docker-compose up -d
 ```  
 
 Now a Docker container named 'dca_php' is running in the background. You can execute now any command in this container. 
-For example `docker exec -it dca_php php --version` for retrieving the installed PHP version from the Docker image.
+For example `docker exec -it dev_dca php --version` for retrieving the installed PHP version from the Docker image.
 
 To stop the Docker container from running, execute 
 ```
 docker-compose stop
 ```
 
-Top and remove the Docker container, execute
+To stop and remove the Docker container, execute
 ```
 docker-compose down
 ```
@@ -36,15 +36,11 @@ docker-compose down
 If you wish to rebuild the Docker image from the Dockerfile, run `docker-compose --build`
 
 ### Start development
-First, make sure you start with installing the software dependencies with Composer.  
-```
-docker exec -it dca_php composer install
-```
 
 To execute a command in the application, you can use
 
 ```
-docker exec -it dca_php php bin/bitcoin-dca <your_command>
+docker exec -it dev_dca php bin/bitcoin-dca <your_command>
 ```
 Replace `<your_command>` with `balance` for example the get all your balances from the connected exchange.
 All available commands you can find in the file `config/services.yaml` under `services` or read the [documentations](config/services.yaml).
