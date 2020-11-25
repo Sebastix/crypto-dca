@@ -6,10 +6,10 @@
 
 Copy and rename .env.dist from the app directory to this directory
 ```
-cp .env.dist docker/development/.env
-cd docker/development
-mv .env.dist .env
+cp .env.dist .env
 ```
+Edit the file with your API keys and withdraw information. 
+[More information here](https://bitcoin-dca.readthedocs.io/en/latest/configuration.html#available-configuration). 
 
 ### Manage your docker environment
 
