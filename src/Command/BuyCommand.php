@@ -59,10 +59,6 @@ class BuyCommand extends Command
 
         $assetToBuy = (string) $input->getArgument('asset');
         // TODO check if this a valid token which can be bought on the exchange
-        if ($assetToBuy === '') {
-          $io->error('Asset must be set as an argument');
-          return 1;
-        }
 
         if (ctype_upper($assetToBuy) === false) {
           $io->error('Asset string must be a uppercase string e.g. XBT for Bitcoin');
