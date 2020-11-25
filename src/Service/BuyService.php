@@ -44,7 +44,7 @@ class BuyService
             'tag' => $tag,
         ];
 
-        $this->logger->info('performing buy for {amount} of token {token}', $logContext);
+        $this->logger->info('performing buy for {amount} of token {asset}', $logContext);
 
         foreach ($this->registeredServices as $registeredService) {
             if ($registeredService->supportsExchange($this->configuredExchange)) {
