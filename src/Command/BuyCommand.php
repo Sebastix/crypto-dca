@@ -58,9 +58,6 @@ class BuyCommand extends Command
         }
 
         $assetToBuy = (string) $input->getArgument('asset');
-
-        // TODO check if this a valid token which can be bought on the exchange
-
         $assetToBuy = strtoupper($assetToBuy);
 
         if (!$input->getOption('yes') && !$io->confirm(

@@ -62,16 +62,7 @@ class WithdrawCommand extends Command
         }
 
         $assetToWithdraw = (string) $input->getArgument('asset');
-        // TODO check if this a valid token which can be bought on the exchange
-        if ($assetToWithdraw === '') {
-          $io->error('Asset must be set as an argument');
-          return 1;
-        }
-
-        if (ctype_upper($assetToWithdraw) === false) {
-          $io->error('Asset string must be a uppercase string e.g. BTC for Bitcoin');
-          return 1;
-        }
+        $assetToWithdraw = strtoupper($assetToWithdraw);
 
         $balanceToWithdraw = $this->withdrawService->getBalance($assetToWithdraw, $input->getOption('tag'));
         $addressToWithdrawTo = $this->withdrawService->getRecipientAddress($assetToWithdraw);
