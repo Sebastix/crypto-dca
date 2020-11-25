@@ -44,4 +44,11 @@ interface BuyServiceInterface
      * @param string $orderId the order id of the order that is being cancelled
      */
     public function cancelBuyOrder(string $orderId): void;
+
+    /**
+     * Method to check if provided asset is a valid asset.
+     *
+     * @param string $asset
+     */
+    public function validateAsset(string $asset): void;
 }

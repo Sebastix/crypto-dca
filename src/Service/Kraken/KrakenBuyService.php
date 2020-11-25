@@ -140,4 +140,9 @@ class KrakenBuyService implements BuyServiceInterface
             ->setDisplayFeesSpent($orderInfo['fee'].' '.$this->baseCurrency)
         ;
     }
+
+    public function validateAsset(string $asset): void
+    {
+      // TODO: Implement validateAsset() method.
+    }
 }

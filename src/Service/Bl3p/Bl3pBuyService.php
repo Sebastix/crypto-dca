@@ -84,4 +84,9 @@ class Bl3pBuyService implements BuyServiceInterface
             [self::ORDER_ID => $orderId]
         );
     }
+
+    public function validateAsset(string $asset): void
+    {
+      // TODO: Implement validateAsset() method.
+    }
 }

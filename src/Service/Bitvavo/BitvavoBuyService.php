@@ -101,4 +101,9 @@ class BitvavoBuyService implements BuyServiceInterface
 
         return $dividend / $divisor;
     }
+
+    public function validateAsset(string $asset): void
+    {
+      // TODO: Implement validateAsset() method.
+    }
 }
