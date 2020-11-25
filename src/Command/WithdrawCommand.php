@@ -74,9 +74,7 @@ class WithdrawCommand extends Command
         }
 
         $balanceToWithdraw = $this->withdrawService->getBalance($assetToWithdraw, $input->getOption('tag'));
-        var_dump($balanceToWithdraw);
-        exit;
-        $addressToWithdrawTo = $this->withdrawService->getRecipientAddress();
+        $addressToWithdrawTo = $this->withdrawService->getRecipientAddress($assetToWithdraw);
 
         if (0 === $balanceToWithdraw) {
             $io->error('No balance available, better start saving something!');
@@ -86,10 +84,12 @@ class WithdrawCommand extends Command
 
         if (!$input->getOption('yes')) {
             $question = sprintf(
-                'Ready to withdraw %s BTC to Bitcoin Address %s? A fee of %s will be taken as withdraw fee.',
-                $balanceToWithdraw / 100000000,
+                'Ready to withdraw %s %s to Address %s? A fee of %s %s will be taken as withdraw fee.',
+                $balanceToWithdraw,
+                $assetToWithdraw,
                 $addressToWithdrawTo,
-                $this->withdrawService->getWithdrawFeeInSatoshis() / 100000000
+                $this->withdrawService->getWithdrawFeeInSatoshis(),
+                $assetToWithdraw
             );
 
             if (!$io->confirm($question, false)) {
@@ -98,6 +98,7 @@ class WithdrawCommand extends Command
         }
 
         $completedWithdraw = $this->withdrawService->withdraw(
+            $assetToWithdraw,
             $balanceToWithdraw,
             $addressToWithdrawTo,
             $input->getOption('tag')

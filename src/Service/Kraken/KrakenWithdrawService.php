@@ -20,9 +20,17 @@ class KrakenWithdrawService implements WithdrawServiceInterface
         $this->logger = $logger;
     }
 
-    public function withdraw(int $balanceToWithdraw, string $addressToWithdrawTo): CompletedWithdraw
+    public function withdraw(string $asset, float $balanceToWithdraw, string $addressToWithdrawTo): CompletedWithdraw
     {
-        // TODO
+        $netAmountToWithdraw = $balanceToWithdraw - $this->getWithdrawFeeInSatoshis();
+
+        $response = $this->client->queryPrivate('Withdraw', [
+          'asset' => $asset,
+          'key' => $addressToWithdrawTo,
+          'amount' => $balanceToWithdraw
+        ]);
+
+        return new CompletedWithdraw($addressToWithdrawTo, $netAmountToWithdraw, $response['refid']);
     }
 
     public function getAvailableBalance(string $assetToWithdraw): float
@@ -32,9 +40,12 @@ class KrakenWithdrawService implements WithdrawServiceInterface
       return (float) $balanceInfo[$assetToWithdraw];
     }
 
-    public function getWithdrawFeeInSatoshis(): int
+    public function getWithdrawFeeInSatoshis(): float
     {
-        // TODO
+        // https://support.kraken.com/hc/en-us/articles/360000767986-Cryptocurrency-withdrawal-fees-and-minimums
+        // TODO get fees data with WithdrawInfo call
+        // It's 0.6 for ADA
+        return 0.6;
     }
 
     public function supportsExchange(string $exchange): bool

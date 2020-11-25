@@ -1,4 +1,7 @@
-FROM php:7.4-cli-alpine
+##################################################################################################################
+# Production Stage
+##################################################################################################################
+FROM php:7.4-cli-alpine AS production
 
 RUN apk --no-cache update \
     && apk --no-cache add gmp-dev python3 py3-pip \
@@ -15,3 +18,10 @@ WORKDIR /app/resources/xpub_derive
 RUN pip3 install --no-cache -r requirements.txt
 
 WORKDIR /app/
+
+##################################################################################################################
+# Development Stage
+##################################################################################################################
+FROM production AS development
+
+RUN composer install

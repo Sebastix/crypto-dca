@@ -42,15 +42,15 @@ class WithdrawService
         $this->configuredExchange = $configuredExchange;
     }
 
-    public function getWithdrawFeeInSatoshis(): int
+    public function getWithdrawFeeInSatoshis(): float
     {
         return $this->getActiveService()->getWithdrawFeeInSatoshis();
     }
 
-    public function withdraw(int $balanceToWithdraw, string $addressToWithdrawTo, string $tag = null): CompletedWithdraw
+    public function withdraw(string $asset, float $balanceToWithdraw, string $addressToWithdrawTo, string $tag = null): CompletedWithdraw
     {
         try {
-            $completedWithdraw = $this->getActiveService()->withdraw($balanceToWithdraw, $addressToWithdrawTo);
+            $completedWithdraw = $this->getActiveService()->withdraw($asset, $balanceToWithdraw, $addressToWithdrawTo);
 
             $this->dispatcher->dispatch(
                 new WithdrawSuccessEvent(
@@ -61,6 +61,7 @@ class WithdrawService
 
             $this->logger->info('withdraw to {address} successful, processing as ID {data.id}', [
                 'tag' => $tag,
+                'asset' => $asset,
                 'balance' => $balanceToWithdraw,
                 'address' => $addressToWithdrawTo,
                 'data' => ['id' => $completedWithdraw->getId()],
@@ -70,6 +71,7 @@ class WithdrawService
         } catch (\Throwable $exception) {
             $this->logger->error('withdraw to {address} failed', [
                 'tag' => $tag,
+                'asset' => $asset,
                 'balance' => $balanceToWithdraw,
                 'address' => $addressToWithdrawTo,
                 'reason' => $exception->getMessage() ?: \get_class($exception),
@@ -93,8 +95,9 @@ class WithdrawService
         return $maxAvailableBalance;
     }
 
-    public function getRecipientAddress(): string
+    public function getRecipientAddress(string $assetToWithdraw): string
     {
+        // TODO return configured address by asset
         foreach ($this->addressProviders as $addressProvider) {
             try {
                 return $addressProvider->provide();

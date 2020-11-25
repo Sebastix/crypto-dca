@@ -146,11 +146,25 @@ services:
   ######################################################################
   # Address Providers
   ######################################################################
-  address_provider.simple:
-    class: Jorijn\Bitcoin\Dca\Provider\SimpleWithdrawAddressProvider
+  address_provider.bitcoin:
+    class: Jorijn\Bitcoin\Dca\Provider\BitcoinWithdrawAddressProvider
     arguments:
       - '@validator.bitcoin_address'
       - '%env(string:WITHDRAW_ADDRESS)%'
+    tags:
+      - { name: 'withdraw-address-provider', priority: -1500 }
+
+  address_provider.ethereum:
+    class: Jorijn\Bitcoin\Dca\Provider\EthereumWithdrawAddressProvider
+    arguments:
+      - '%env(string:WITHDRAW_ADDRESS_ETH)%'
+    tags:
+      - { name: 'withdraw-address-provider', priority: -1100 }
+
+  address_provider.cardano:
+    class: Jorijn\Bitcoin\Dca\Provider\CardanoWithdrawAddressProvider
+    arguments:
+      - '%env(string:WITHDRAW_ADDRESS_ADA)%'
     tags:
       - { name: 'withdraw-address-provider', priority: -1000 }
 

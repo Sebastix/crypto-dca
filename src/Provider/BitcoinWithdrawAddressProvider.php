@@ -6,7 +6,7 @@ namespace Jorijn\Bitcoin\Dca\Provider;
 
 use Jorijn\Bitcoin\Dca\Validator\ValidationInterface;
 
-class SimpleWithdrawAddressProvider implements WithdrawAddressProviderInterface
+class BitcoinWithdrawAddressProvider implements WithdrawAddressProviderInterface
 {
     protected ?string $configuredAddress;
     protected ValidationInterface $validation;

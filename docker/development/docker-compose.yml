@@ -4,9 +4,9 @@ services:
     build:
       context: ../../
       dockerfile: docker/development/Dockerfile
+    env_file: ./.env
     container_name: dca_php
     volumes:
-    - ./.env:/app/.env
     - ../../:/app/
     working_dir: /app/
     tty: true

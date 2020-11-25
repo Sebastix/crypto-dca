@@ -22,7 +22,7 @@ class Bl3pWithdrawService implements WithdrawServiceInterface
         $this->logger = $logger;
     }
 
-    public function withdraw(int $balanceToWithdraw, string $addressToWithdrawTo): CompletedWithdraw
+    public function withdraw(string $asset, float $balanceToWithdraw, string $addressToWithdrawTo): CompletedWithdraw
     {
         $netAmountToWithdraw = $balanceToWithdraw - $this->getWithdrawFeeInSatoshis();
         $response = $this->client->apiCall('GENMKT/money/withdraw', [
@@ -41,7 +41,7 @@ class Bl3pWithdrawService implements WithdrawServiceInterface
         return (int) ($response['data']['wallets'][$assetToWithdraw]['available']['value_int'] ?? 0);
     }
 
-    public function getWithdrawFeeInSatoshis(): int
+    public function getWithdrawFeeInSatoshis(): float
     {
         return 30000;
     }

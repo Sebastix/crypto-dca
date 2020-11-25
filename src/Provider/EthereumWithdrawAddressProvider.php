@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jorijn\Bitcoin\Dca\Provider;
 
-class CardanoWithdrawAddressProvider implements WithdrawAddressProviderInterface
+class EthereumWithdrawAddressProvider implements WithdrawAddressProviderInterface
 {
     protected ?string $configuredAddress;
 
