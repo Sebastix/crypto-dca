@@ -146,27 +146,34 @@ services:
   ######################################################################
   # Address Providers
   ######################################################################
+  address_provider.krakenbitcoin:
+    class: Jorijn\Bitcoin\Dca\Provider\Kraken\BitcoinWithdrawAddressProvider
+    arguments:
+      - '%env(string:KRAKEN_WITHDRAW_ADDRESS_XXBT_KEY)%'
+    tags:
+      - { name: 'withdraw-address-provider', priority: -3000 }
+
+  address_provider.krakenethereum:
+    class: Jorijn\Bitcoin\Dca\Provider\Kraken\EthereumWithdrawAddressProvider
+    arguments:
+      - '%env(string:KRAKEN_WITHDRAW_ADDRESS_ETH_KEY)%'
+    tags:
+      - { name: 'withdraw-address-provider', priority: -2500 }
+
+  address_provider.krakencardano:
+    class: Jorijn\Bitcoin\Dca\Provider\Kraken\CardanoWithdrawAddressProvider
+    arguments:
+      - '%env(string:KRAKEN_WITHDRAW_ADDRESS_ADA_KEY)%'
+    tags:
+      - { name: 'withdraw-address-provider', priority: -2000 }
+
   address_provider.bitcoin:
     class: Jorijn\Bitcoin\Dca\Provider\BitcoinWithdrawAddressProvider
     arguments:
       - '@validator.bitcoin_address'
-      - '%env(string:KRAKEN_WITHDRAW_ADDRESS_XXBT)%'
+      - '%env(string:WITHDRAW_ADDRESS)%'
     tags:
       - { name: 'withdraw-address-provider', priority: -1500 }
-
-  address_provider.ethereum:
-    class: Jorijn\Bitcoin\Dca\Provider\EthereumWithdrawAddressProvider
-    arguments:
-      - '%env(string:KRAKEN_WITHDRAW_ADDRESS_ETH)%'
-    tags:
-      - { name: 'withdraw-address-provider', priority: -1100 }
-
-  address_provider.cardano:
-    class: Jorijn\Bitcoin\Dca\Provider\CardanoWithdrawAddressProvider
-    arguments:
-      - '%env(string:KRAKEN_WITHDRAW_ADDRESS_ADA)%'
-    tags:
-      - { name: 'withdraw-address-provider', priority: -1000 }
 
   address_provider.xpub:
     class: Jorijn\Bitcoin\Dca\Provider\XpubWithdrawAddressProvider

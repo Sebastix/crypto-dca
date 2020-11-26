@@ -102,11 +102,13 @@ class WithdrawService
 
     public function getRecipientAddress(string $assetToWithdraw): string
     {
-        // TODO return configured address by asset
+        // Return configured address by asset.
         foreach ($this->addressProviders as $addressProvider) {
-            var_dump($addressProvider);
             try {
-                return $addressProvider->provide();
+                $addressAsset = $addressProvider->getAsset();
+                if ($addressAsset === $assetToWithdraw) {
+                  return $addressProvider->provide();
+                }
             } catch (\Throwable $exception) {
                 // allowed to fail
             }

@@ -14,17 +14,20 @@ class XpubWithdrawAddressProvider implements WithdrawAddressProviderInterface
     protected AddressFromMasterPublicKeyComponentInterface $keyFactory;
     protected TaggedIntegerRepositoryInterface $xpubRepository;
     protected ?string $configuredXPub;
+    public string $asset;
 
     public function __construct(
         ValidationInterface $validation,
         AddressFromMasterPublicKeyComponentInterface $keyFactory,
         TaggedIntegerRepositoryInterface $xpubRepository,
-        ?string $configuredXPub
+        ?string $configuredXPub,
+        string $asset = 'xpub'
     ) {
         $this->validation = $validation;
         $this->keyFactory = $keyFactory;
         $this->configuredXPub = $configuredXPub;
         $this->xpubRepository = $xpubRepository;
+        $this->asset = $asset;
     }
 
     public function provide(): string
@@ -36,5 +39,10 @@ class XpubWithdrawAddressProvider implements WithdrawAddressProviderInterface
         $this->validation->validate($derivedAddress);
 
         return $derivedAddress;
+    }
+
+    public function getAsset(): string
+    {
+      return $this->asset;
     }
 }

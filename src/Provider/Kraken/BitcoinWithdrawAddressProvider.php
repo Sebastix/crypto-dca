@@ -2,27 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Jorijn\Bitcoin\Dca\Provider;
+namespace Jorijn\Bitcoin\Dca\Provider\Kraken;
 
-use Jorijn\Bitcoin\Dca\Validator\ValidationInterface;
+use Jorijn\Bitcoin\Dca\Provider\WithdrawAddressProviderInterface;
 
 class BitcoinWithdrawAddressProvider implements WithdrawAddressProviderInterface
 {
     protected ?string $configuredAddress;
-    protected ValidationInterface $validation;
     public string $asset;
 
-    public function __construct(ValidationInterface $validation, ?string $configuredAddress, string $asset = 'BTC')
+    public function __construct(?string $configuredAddress, string $asset = 'XXBT')
     {
         $this->configuredAddress = $configuredAddress;
-        $this->validation = $validation;
-        $this->asset = $asset;
+      $this->asset = $asset;
     }
 
     public function provide(): string
     {
-        $this->validation->validate($this->configuredAddress);
-
         return $this->configuredAddress;
     }
 

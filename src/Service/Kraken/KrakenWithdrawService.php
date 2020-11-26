@@ -51,16 +51,13 @@ class KrakenWithdrawService implements WithdrawServiceInterface
         'key' => $addressToWithdrawTo,
         'amount' => $amountToWithdraw
       ]);
-      var_dump($withDrawInfo);
-      exit;
-      // It's 0.6 for ADA
-      return 0.6;
 
+      return (float) $withDrawInfo['fee'];
     }
 
     public function getWithdrawFeeInSatoshis(): float
     {
-      // TODO: Implement getWithdrawFeeInSatoshis() method.
+      // TODO: recalculate to satoshis.
       return 0;
     }
 
