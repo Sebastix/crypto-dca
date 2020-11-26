@@ -150,21 +150,21 @@ services:
     class: Jorijn\Bitcoin\Dca\Provider\BitcoinWithdrawAddressProvider
     arguments:
       - '@validator.bitcoin_address'
-      - '%env(string:WITHDRAW_ADDRESS)%'
+      - '%env(string:KRAKEN_WITHDRAW_ADDRESS_XXBT)%'
     tags:
       - { name: 'withdraw-address-provider', priority: -1500 }
 
   address_provider.ethereum:
     class: Jorijn\Bitcoin\Dca\Provider\EthereumWithdrawAddressProvider
     arguments:
-      - '%env(string:WITHDRAW_ADDRESS_ETH)%'
+      - '%env(string:KRAKEN_WITHDRAW_ADDRESS_ETH)%'
     tags:
       - { name: 'withdraw-address-provider', priority: -1100 }
 
   address_provider.cardano:
     class: Jorijn\Bitcoin\Dca\Provider\CardanoWithdrawAddressProvider
     arguments:
-      - '%env(string:WITHDRAW_ADDRESS_ADA)%'
+      - '%env(string:KRAKEN_WITHDRAW_ADDRESS_ADA)%'
     tags:
       - { name: 'withdraw-address-provider', priority: -1000 }
 

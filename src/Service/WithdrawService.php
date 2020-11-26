@@ -42,6 +42,11 @@ class WithdrawService
         $this->configuredExchange = $configuredExchange;
     }
 
+    public function getWithdrawFee(string $asset, float $amountToWithdraw, string $addressToWithdrawTo): float
+    {
+      return $this->getActiveService()->getWithdrawFee($asset, $amountToWithdraw, $addressToWithdrawTo);
+    }
+
     public function getWithdrawFeeInSatoshis(): float
     {
         return $this->getActiveService()->getWithdrawFeeInSatoshis();
@@ -99,6 +104,7 @@ class WithdrawService
     {
         // TODO return configured address by asset
         foreach ($this->addressProviders as $addressProvider) {
+            var_dump($addressProvider);
             try {
                 return $addressProvider->provide();
             } catch (\Throwable $exception) {

@@ -20,14 +20,14 @@ class KrakenWithdrawService implements WithdrawServiceInterface
         $this->logger = $logger;
     }
 
-    public function withdraw(string $asset, float $balanceToWithdraw, string $addressToWithdrawTo): CompletedWithdraw
+    public function withdraw(string $asset, float $amountToWithdraw, string $addressToWithdrawTo): CompletedWithdraw
     {
-        $netAmountToWithdraw = $balanceToWithdraw - $this->getWithdrawFeeInSatoshis();
-
+        $netAmountToWithdraw = $amountToWithdraw - $this->getWithdrawFee();
+        // https://www.kraken.com/features/api#withdraw-funds
         $response = $this->client->queryPrivate('Withdraw', [
           'asset' => $asset,
           'key' => $addressToWithdrawTo,
-          'amount' => $balanceToWithdraw
+          'amount' => $amountToWithdraw
         ]);
 
         return new CompletedWithdraw($addressToWithdrawTo, $netAmountToWithdraw, $response['refid']);
@@ -40,16 +40,33 @@ class KrakenWithdrawService implements WithdrawServiceInterface
       return (float) $balanceInfo[$assetToWithdraw];
     }
 
+    public function getWithdrawFee(string $asset, float $amountToWithdraw, string $addressToWithdrawTo): float
+    {
+      /**
+       * https://support.kraken.com/hc/en-us/articles/360000767986-Cryptocurrency-withdrawal-fees-and-minimums
+       */
+      // https://www.kraken.com/features/api#get-withdrawal-info
+      $withDrawInfo = $this->client->queryPrivate('WithdrawInfo', [
+        'asset' => $asset,
+        'key' => $addressToWithdrawTo,
+        'amount' => $amountToWithdraw
+      ]);
+      var_dump($withDrawInfo);
+      exit;
+      // It's 0.6 for ADA
+      return 0.6;
+
+    }
+
     public function getWithdrawFeeInSatoshis(): float
     {
-        // https://support.kraken.com/hc/en-us/articles/360000767986-Cryptocurrency-withdrawal-fees-and-minimums
-        // TODO get fees data with WithdrawInfo call
-        // It's 0.6 for ADA
-        return 0.6;
+      // TODO: Implement getWithdrawFeeInSatoshis() method.
+      return 0;
     }
 
     public function supportsExchange(string $exchange): bool
     {
         return 'kraken' === $exchange;
     }
+
 }

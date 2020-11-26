@@ -22,9 +22,9 @@ class Bl3pWithdrawService implements WithdrawServiceInterface
         $this->logger = $logger;
     }
 
-    public function withdraw(string $asset, float $balanceToWithdraw, string $addressToWithdrawTo): CompletedWithdraw
+    public function withdraw(string $asset, float $amountToWithdraw, string $addressToWithdrawTo): CompletedWithdraw
     {
-        $netAmountToWithdraw = $balanceToWithdraw - $this->getWithdrawFeeInSatoshis();
+        $netAmountToWithdraw = $amountToWithdraw - $this->getWithdrawFeeInSatoshis();
         $response = $this->client->apiCall('GENMKT/money/withdraw', [
             'currency' => 'BTC',
             'address' => $addressToWithdrawTo,
@@ -49,5 +49,10 @@ class Bl3pWithdrawService implements WithdrawServiceInterface
     public function supportsExchange(string $exchange): bool
     {
         return self::BL3P === $exchange;
+    }
+
+    public function getWithdrawFee(string $asset, float $amountToWithdraw, string $addressToWithdrawTo): float
+    {
+      // TODO: Implement getWithdrawFee() method.
     }
 }

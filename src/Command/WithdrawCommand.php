@@ -64,10 +64,10 @@ class WithdrawCommand extends Command
         $assetToWithdraw = (string) $input->getArgument('asset');
         $assetToWithdraw = strtoupper($assetToWithdraw);
 
-        $balanceToWithdraw = $this->withdrawService->getBalance($assetToWithdraw, $input->getOption('tag'));
+        $amountToWithdraw = $this->withdrawService->getBalance($assetToWithdraw, $input->getOption('tag'));
         $addressToWithdrawTo = $this->withdrawService->getRecipientAddress($assetToWithdraw);
 
-        if (0 === $balanceToWithdraw) {
+        if (0 === $amountToWithdraw) {
             $io->error('No balance available, better start saving something!');
 
             return 0;
@@ -76,10 +76,10 @@ class WithdrawCommand extends Command
         if (!$input->getOption('yes')) {
             $question = sprintf(
                 'Ready to withdraw %s %s to Address %s? A fee of %s %s will be taken as withdraw fee.',
-                $balanceToWithdraw,
+                $amountToWithdraw,
                 $assetToWithdraw,
                 $addressToWithdrawTo,
-                $this->withdrawService->getWithdrawFeeInSatoshis(),
+                $this->withdrawService->getWithdrawFee($assetToWithdraw, $amountToWithdraw, $addressToWithdrawTo),
                 $assetToWithdraw
             );
 
@@ -90,7 +90,7 @@ class WithdrawCommand extends Command
 
         $completedWithdraw = $this->withdrawService->withdraw(
             $assetToWithdraw,
-            $balanceToWithdraw,
+            $amountToWithdraw,
             $addressToWithdrawTo,
             $input->getOption('tag')
         );
