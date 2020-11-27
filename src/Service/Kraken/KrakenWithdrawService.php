@@ -22,7 +22,7 @@ class KrakenWithdrawService implements WithdrawServiceInterface
 
     public function withdraw(string $asset, float $amountToWithdraw, string $addressToWithdrawTo): CompletedWithdraw
     {
-        $netAmountToWithdraw = $amountToWithdraw - $this->getWithdrawFee();
+        $netAmountToWithdraw = $amountToWithdraw - $this->getWithdrawFee($asset, $amountToWithdraw, $addressToWithdrawTo);
         // https://www.kraken.com/features/api#withdraw-funds
         $response = $this->client->queryPrivate('Withdraw', [
           'asset' => $asset,
