@@ -23,6 +23,7 @@ _Please be aware this is beta software. Test thoroughly with small amounts of mo
 |------|------|------|
 | BL3P | https://bl3p.eu/ | EUR |
 | Bitvavo | https://bitvavo.com/ | EUR |
+| Kraken | https://kraken.com/ | EUR |
 
 ## About this software
 The DCA tool is built with flexibility in mind, allowing you to specify your own schedule of buying and withdrawing. A few examples that are possible:
