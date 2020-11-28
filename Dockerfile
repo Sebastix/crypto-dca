@@ -66,3 +66,10 @@ RUN chmod +x /usr/local/bin/docker-entrypoint
 RUN /app/bin/bitcoin-dca >/dev/null
 
 ENTRYPOINT ["docker-entrypoint"]
+
+##################################################################################################################
+# Development Stage
+##################################################################################################################
+FROM base_image AS development
+
+# Do development things here
