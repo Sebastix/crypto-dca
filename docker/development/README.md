@@ -13,15 +13,14 @@ Edit the file with your API keys and withdraw information.
 
 ### Manage your docker environment
 
-Make sure you are in directory
-`docker/development`  
+Make sure you are in directory `docker/development`  
 Run the following commands  
 ```
 docker-compose up -d
 ```  
 
 Now a Docker container named 'dca_php' is running in the background. You can execute now any command in this container. 
-For example `docker exec -it dev_dca php --version` for retrieving the installed PHP version from the Docker image.
+For example `docker-compose -it dca php --version` for retrieving the installed PHP version from the Docker image.
 
 To stop the Docker container from running, execute 
 ```
@@ -37,10 +36,11 @@ If you wish to rebuild the Docker image from the Dockerfile, run `docker-compose
 
 ### Start development
 
+Make sure you are in directory `docker/development` 
 To execute a command in the application, you can use
 
 ```
-docker exec -it dev_dca php bin/bitcoin-dca <your_command>
+docker-compose exec dca php bin/bitcoin-dca <your_command>
 ```
 Replace `<your_command>` with `balance` for example the get all your balances from the connected exchange.
 All available commands you can find in the file `config/services.yaml` under `services` or read the [documentations](config/services.yaml).
