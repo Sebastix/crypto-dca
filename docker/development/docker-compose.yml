@@ -3,7 +3,7 @@ services:
   dca:
     build:
       context: ../../
-      dockerfile: Dockerfile
+      dockerfile: docker/development/Dockerfile
       target: development
     env_file: ../../.env
     volumes:
