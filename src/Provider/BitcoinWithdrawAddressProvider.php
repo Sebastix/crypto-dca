@@ -10,7 +10,7 @@ class BitcoinWithdrawAddressProvider implements WithdrawAddressProviderInterface
 {
     protected ?string $configuredAddress;
     protected ValidationInterface $validation;
-    public string $asset;
+    protected string $asset;
 
     public function __construct(ValidationInterface $validation, ?string $configuredAddress, string $asset = 'BTC')
     {
@@ -28,6 +28,6 @@ class BitcoinWithdrawAddressProvider implements WithdrawAddressProviderInterface
 
     public function getAsset(): string
     {
-      return $this->asset;
+        return $this->asset;
     }
 }

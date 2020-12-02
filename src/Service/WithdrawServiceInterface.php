@@ -14,7 +14,7 @@ interface WithdrawServiceInterface
 
     public function getWithdrawFee(string $asset, float $amountToWithdraw, string $addressToWithdrawTo): float;
 
-    public function getWithdrawFeeInSatoshis(): float;
+    public function getWithdrawFeeInSatoshis(): int;
 
     public function supportsExchange(string $exchange): bool;
 }

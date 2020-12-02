@@ -69,7 +69,7 @@ final class WithdrawCommandTest extends TestCase
         $this->withdrawService->expects(static::never())->method('withdraw');
 
         $commandTester = $this->createCommandTester();
-        $commandTester->execute(['command' => $this->command->getName(), '--yes' => null]);
+        $commandTester->execute(['command' => $this->command->getName(), 'asset' => 'BTC', '--yes' => null]);
 
         static::assertSame(1, $commandTester->getStatusCode());
     }
@@ -85,11 +85,13 @@ final class WithdrawCommandTest extends TestCase
         bool $expectWithdraw = false,
         int $simulatedBalance = 0
     ): void {
+        $asset = 'BTC';
         $address = 'address'.random_int(1000, 2000);
 
         $this->withdrawService
             ->expects(static::once())
             ->method('getBalance')
+            ->with($asset)
             ->with($tag)
             ->willReturn($simulatedBalance)
         ;
@@ -97,13 +99,14 @@ final class WithdrawCommandTest extends TestCase
         $this->withdrawService
             ->expects(static::once())
             ->method('getRecipientAddress')
+            ->with($asset)
             ->willReturn($address)
         ;
 
         $this->withdrawService
             ->expects($expectWithdraw ? static::once() : static::never())
             ->method('withdraw')
-            ->with($simulatedBalance, $address, $tag)
+            ->with($asset, $simulatedBalance, $address, $tag)
         ;
 
         $commandTester = $this->createCommandTester();
@@ -111,7 +114,7 @@ final class WithdrawCommandTest extends TestCase
             $commandTester->setInputs([$attendedOK ? 'yes' : 'no']);
         }
         $commandTester->execute(
-            ['command' => $this->command->getName(), '--all' => null]
+            ['command' => $this->command->getName(), 'asset' => $asset, '--all' => null]
             + ($unattended ? ['--yes' => null] : [])
             + (!empty($tag) ? ['--tag' => $tag] : [])
         );

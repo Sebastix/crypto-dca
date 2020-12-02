@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Jorijn\Bitcoin\Dca\Service;
+namespace Tests\Jorijn\Bitcoin\Dca\Service\Bl3p;
 
 use Jorijn\Bitcoin\Dca\Client\Bl3pClientInterface;
 use Jorijn\Bitcoin\Dca\Service\Bl3p\Bl3pWithdrawService;
@@ -48,7 +48,7 @@ final class Bl3pWithdrawServiceTest extends TestCase
      */
     public function testGetBalance(): void
     {
-        $balance = random_int(1000, 2000);
+        $balance = (float)random_int(1000, 2000);
 
         $this->client
             ->expects(static::once())
@@ -67,8 +67,9 @@ final class Bl3pWithdrawServiceTest extends TestCase
      */
     public function testWithdraw(): void
     {
+        $asset = 'BTC';
         $address = self::ADDRESS.random_int(1000, 2000);
-        $amount = random_int(100000, 300000);
+        $amount = (float)random_int(100000, 300000);
         $netAmount = $amount - $this->service->getWithdrawFeeInSatoshis();
         $withdrawID = 'id'.random_int(1000, 2000);
         $apiResponse = ['data' => ['id' => $withdrawID]];
@@ -92,7 +93,7 @@ final class Bl3pWithdrawServiceTest extends TestCase
             ->willReturn($apiResponse)
         ;
 
-        $dto = $this->service->withdraw($amount, $address);
+        $dto = $this->service->withdraw($asset, $amount, $address);
         static::assertSame($withdrawID, $dto->getId());
         static::assertSame($netAmount, $dto->getNetAmount());
         static::assertSame($address, $dto->getRecipientAddress());
@@ -115,7 +116,7 @@ final class Bl3pWithdrawServiceTest extends TestCase
         static::assertSame(30000, $this->service->getWithdrawFeeInSatoshis());
     }
 
-    private function createBalanceStructure(int $balance): array
+    private function createBalanceStructure(float $balance): array
     {
         return [
             'data' => [

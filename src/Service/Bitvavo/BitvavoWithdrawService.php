@@ -51,7 +51,7 @@ class BitvavoWithdrawService implements WithdrawServiceInterface
         return $available - $inOrder;
     }
 
-    public function getWithdrawFeeInSatoshis(): float
+    public function getWithdrawFeeInSatoshis(): int
     {
         $response = $this->client->apiCall('assets', 'GET', [self::SYMBOL => 'BTC']);
 

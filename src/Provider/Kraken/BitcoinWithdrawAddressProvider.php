@@ -9,12 +9,12 @@ use Jorijn\Bitcoin\Dca\Provider\WithdrawAddressProviderInterface;
 class BitcoinWithdrawAddressProvider implements WithdrawAddressProviderInterface
 {
     protected ?string $configuredAddress;
-    public string $asset;
+    protected string $asset;
 
     public function __construct(?string $configuredAddress, string $asset = 'XXBT')
     {
         $this->configuredAddress = $configuredAddress;
-      $this->asset = $asset;
+        $this->asset = $asset;
     }
 
     public function provide(): string
@@ -24,6 +24,6 @@ class BitcoinWithdrawAddressProvider implements WithdrawAddressProviderInterface
 
     public function getAsset(): string
     {
-      return $this->asset;
+        return $this->asset;
     }
 }

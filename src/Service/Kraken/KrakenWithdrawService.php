@@ -55,7 +55,7 @@ class KrakenWithdrawService implements WithdrawServiceInterface
       return (float) $withDrawInfo['fee'];
     }
 
-    public function getWithdrawFeeInSatoshis(): float
+    public function getWithdrawFeeInSatoshis(): int
     {
       // TODO: recalculate to satoshis.
       return 0;

@@ -73,3 +73,5 @@ ENTRYPOINT ["docker-entrypoint"]
 FROM base_image AS development
 
 # Do development things here
+COPY --from=vendor /usr/bin/composer /usr/bin/composer
+RUN composer install --no-interaction --no-plugins --no-scripts --prefer-dist --no-ansi --ignore-platform-reqs

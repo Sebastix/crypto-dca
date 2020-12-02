@@ -47,7 +47,7 @@ class WithdrawService
       return $this->getActiveService()->getWithdrawFee($asset, $amountToWithdraw, $addressToWithdrawTo);
     }
 
-    public function getWithdrawFeeInSatoshis(): float
+    public function getWithdrawFeeInSatoshis(): int
     {
         return $this->getActiveService()->getWithdrawFeeInSatoshis();
     }

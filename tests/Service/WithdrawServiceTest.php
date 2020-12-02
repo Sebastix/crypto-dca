@@ -62,9 +62,9 @@ final class WithdrawServiceTest extends TestCase
     public function providerOfBalancesAndTags(): array
     {
         return [
-            'tag, exchange is limiting factor' => [1000, 'tag'.random_int(1000, 2000), 2000, 1000],
-            'tag, tag is limiting factor' => [3000, 'tag'.random_int(1000, 2000), 2000, 2000],
-            'no tag' => [1000, null, null, 1000],
+            'tag, exchange is limiting factor' => [(float)1000, 'tag'.random_int(1000, 2000), (float)2000, (float)1000],
+            'tag, tag is limiting factor' => [(float)3000, 'tag'.random_int(1000, 2000), (float)2000, (float)2000],
+            'no tag' => [(float)1000, null, null, (float)1000],
         ];
     }
 
@@ -106,7 +106,8 @@ final class WithdrawServiceTest extends TestCase
     {
         $this->expectSupportedCheckToService();
 
-        $balance = random_int(1000, 2000);
+        $asset = 'BTC';
+        $balance = (float)random_int(1000, 2000);
         $address = self::ADDRESS.random_int(1000, 2000);
         $id = 'id'.random_int(1000, 2000);
 
@@ -120,7 +121,7 @@ final class WithdrawServiceTest extends TestCase
         $this->supportedService
             ->expects(static::once())
             ->method('withdraw')
-            ->with($balance, $address)
+            ->with($asset, $balance, $address)
             ->willReturn($withdrawDTO)
         ;
 
@@ -142,7 +143,7 @@ final class WithdrawServiceTest extends TestCase
             $this->dispatcher,
             $this->logger,
             $this->configuredExchange
-        ))->withdraw($balance, $address, $tag);
+        ))->withdraw($asset, $balance, $address, $tag);
 
         static::assertSame($withdrawDTO, $completedWithdraw);
     }
@@ -156,7 +157,8 @@ final class WithdrawServiceTest extends TestCase
     {
         $this->expectSupportedCheckToService();
 
-        $balance = random_int(1000, 2000);
+        $asset = 'BTC';
+        $balance = (float)random_int(1000, 2000);
         $address = self::ADDRESS.random_int(1000, 2000);
 
         $this->logger
@@ -168,7 +170,7 @@ final class WithdrawServiceTest extends TestCase
         $this->supportedService
             ->expects(static::once())
             ->method('withdraw')
-            ->with($balance, $address)
+            ->with($asset, $balance, $address)
             ->willThrowException($error)
         ;
 
@@ -186,7 +188,7 @@ final class WithdrawServiceTest extends TestCase
             $this->dispatcher,
             $this->logger,
             $this->configuredExchange
-        ))->withdraw($balance, $address, $tag);
+        ))->withdraw($asset, $balance, $address, $tag);
     }
 
     /**
@@ -195,12 +197,13 @@ final class WithdrawServiceTest extends TestCase
      * @dataProvider providerOfBalancesAndTags
      */
     public function testGetBalanceForActiveExchange(
-        int $exchangeBalance,
+        float $exchangeBalance,
         ?string $tag,
-        ?int $taggedBalance,
-        int $expectedBalance
+        ?float $taggedBalance,
+        float $expectedBalance
     ): void {
         $this->expectSupportedCheckToService();
+        $asset = 'BTC';
 
         $this->supportedService
             ->expects(static::once())
@@ -224,7 +227,7 @@ final class WithdrawServiceTest extends TestCase
             $this->dispatcher,
             $this->logger,
             $this->configuredExchange
-        ))->getBalance($tag);
+        ))->getBalance($asset, $tag);
 
         static::assertSame($expectedBalance, $returnedBalance);
     }
@@ -236,14 +239,27 @@ final class WithdrawServiceTest extends TestCase
      */
     public function testGetRecipientAddress(): void
     {
+        $asset = 'XXBT';
         $address = self::ADDRESS.random_int(1000, 2000);
 
         $unsupportedAddressProvider = $this->createMock(WithdrawAddressProviderInterface::class);
+
+        $unsupportedAddressProvider
+          ->expects(static::exactly(2))
+          ->method('getAsset')
+          ->willThrowException(new \RuntimeException('test failure getAsset'))
+        ;
+
         $unsupportedAddressProvider
             ->expects(static::exactly(2))
             ->method('provide')
-            ->willThrowException(new \RuntimeException('test failure'))
+            ->willThrowException(new \RuntimeException('test failure provide'))
         ;
+
+        $this->addressProvider
+            ->expects(static::once())
+            ->method('getAsset')
+            ->willReturn($asset);
 
         $this->addressProvider
             ->expects(static::once())
@@ -258,7 +274,7 @@ final class WithdrawServiceTest extends TestCase
             $this->dispatcher,
             $this->logger,
             $this->configuredExchange
-        ))->getRecipientAddress();
+        ))->getRecipientAddress($asset);
 
         static::assertSame($address, $returnedAddress);
 
@@ -271,7 +287,7 @@ final class WithdrawServiceTest extends TestCase
             $this->dispatcher,
             $this->logger,
             $this->configuredExchange
-        ))->getRecipientAddress();
+        ))->getRecipientAddress($asset);
     }
 
     /**
@@ -280,6 +296,7 @@ final class WithdrawServiceTest extends TestCase
      */
     public function testNoExchangeAvailable(): void
     {
+        $asset = 'BTC';
         $unsupportedService = $this->createMock(WithdrawServiceInterface::class);
         $unsupportedService
             ->expects(static::once())
@@ -297,7 +314,7 @@ final class WithdrawServiceTest extends TestCase
             $this->dispatcher,
             $this->logger,
             $this->configuredExchange
-        ))->getBalance();
+        ))->getBalance($asset);
     }
 
     protected function expectSupportedCheckToService(): void

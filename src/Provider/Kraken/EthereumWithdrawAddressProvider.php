@@ -9,12 +9,12 @@ use Jorijn\Bitcoin\Dca\Provider\WithdrawAddressProviderInterface;
 class EthereumWithdrawAddressProvider implements WithdrawAddressProviderInterface
 {
     protected ?string $configuredAddress;
-    public string $asset;
+    protected string $asset;
 
     public function __construct(?string $configuredAddress, string $asset = 'ETH')
     {
         $this->configuredAddress = $configuredAddress;
-        $this->asset = 'ETH';
+        $this->asset = $asset;
     }
 
     public function provide(): string
@@ -24,6 +24,6 @@ class EthereumWithdrawAddressProvider implements WithdrawAddressProviderInterfac
 
     public function getAsset(): string
     {
-      return $this->asset;
+        return $this->asset;
     }
 }

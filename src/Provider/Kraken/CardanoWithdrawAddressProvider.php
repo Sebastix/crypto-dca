@@ -9,7 +9,7 @@ use Jorijn\Bitcoin\Dca\Provider\WithdrawAddressProviderInterface;
 class CardanoWithdrawAddressProvider implements WithdrawAddressProviderInterface
 {
     protected ?string $configuredAddress;
-    public string $asset;
+    protected string $asset;
 
     public function __construct(?string $configuredAddress, string $asset = 'ADA')
     {
@@ -24,6 +24,6 @@ class CardanoWithdrawAddressProvider implements WithdrawAddressProviderInterface
 
     public function getAsset(): string
     {
-      return $this->asset;
+        return $this->asset;
     }
 }

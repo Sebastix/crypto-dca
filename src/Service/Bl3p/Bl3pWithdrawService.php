@@ -41,7 +41,7 @@ class Bl3pWithdrawService implements WithdrawServiceInterface
         return (int) ($response['data']['wallets'][$assetToWithdraw]['available']['value_int'] ?? 0);
     }
 
-    public function getWithdrawFeeInSatoshis(): float
+    public function getWithdrawFeeInSatoshis(): int
     {
         return 30000;
     }

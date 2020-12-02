@@ -24,7 +24,7 @@ final class CompletedWithdrawTest extends TestCase
     {
         $id = 'id'.random_int(5, 10);
         $recipientAddress = 'ra'.random_int(5, 10);
-        $netAmount = random_int(5, 10);
+        $netAmount = (float)random_int(5, 10);
 
         $dto = new CompletedWithdraw($recipientAddress, $netAmount, $id);
 

@@ -16,13 +16,14 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-final class SimpleWithdrawAddressProviderTest extends TestCase
+final class BitcoinWithdrawAddressProviderTest extends TestCase
 {
     /** @var MockObject|ValidationInterface */
     private $validation;
     /** @var BitcoinWithdrawAddressProvider */
     private BitcoinWithdrawAddressProvider $provider;
     private string $configuredAddress;
+    private string $asset;
 
     protected function setUp(): void
     {
@@ -30,7 +31,8 @@ final class SimpleWithdrawAddressProviderTest extends TestCase
 
         $this->configuredAddress = 'ca'.random_int(1000, 2000);
         $this->validation = $this->createMock(ValidationInterface::class);
-        $this->provider = new BitcoinWithdrawAddressProvider($this->validation, $this->configuredAddress);
+        $this->asset = 'BTC';
+        $this->provider = new BitcoinWithdrawAddressProvider($this->validation, $this->configuredAddress, $this->asset);
     }
 
     /**
@@ -64,5 +66,13 @@ final class SimpleWithdrawAddressProviderTest extends TestCase
         ;
 
         static::assertSame($this->configuredAddress, $this->provider->provide());
+    }
+
+    /**
+     * @covers ::getAsset
+     */
+    public function testExpectedAsset(): void
+    {
+      static::assertSame($this->asset, $this->provider->getAsset());
     }
 }

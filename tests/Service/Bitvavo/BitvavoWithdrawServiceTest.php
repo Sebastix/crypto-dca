@@ -59,8 +59,8 @@ final class BitvavoWithdrawServiceTest extends TestCase
             )
         ;
 
-        static::assertSame(134500000, $this->service->getAvailableBalance());
-        static::assertSame(0, $this->service->getAvailableBalance());
+        static::assertSame((float)134500000, $this->service->getAvailableBalance('BTC'));
+        static::assertSame((float)0, $this->service->getAvailableBalance('BTC'));
     }
 
     /**
@@ -70,11 +70,12 @@ final class BitvavoWithdrawServiceTest extends TestCase
      */
     public function testWithdraw(): void
     {
+        $asset = 'BTC';
         $address = self::ADDRESS.random_int(1000, 2000);
-        $amount = random_int(100000, 300000);
+        $amount = (float)random_int(100000, 300000);
         $apiResponse = [];
 
-        $bitvavoFee = random_int(1000, 2000);
+        $bitvavoFee = (float)random_int(1000, 2000);
         $netAmount = $amount - $bitvavoFee;
         $this->client
             ->expects(static::exactly(2))
@@ -105,7 +106,7 @@ final class BitvavoWithdrawServiceTest extends TestCase
             )
         ;
 
-        $dto = $this->service->withdraw($amount, $address);
+        $dto = $this->service->withdraw($asset, $amount, $address);
 
         static::assertSame($netAmount, $dto->getNetAmount());
         static::assertSame($address, $dto->getRecipientAddress());
