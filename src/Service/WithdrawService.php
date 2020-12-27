@@ -114,7 +114,7 @@ class WithdrawService
             }
         }
 
-        throw new NoRecipientAddressAvailableException('Unable to determine address to withdraw to, did you configure any?');
+        throw new NoRecipientAddressAvailableException(sprintf('Unable to determine address to withdraw your assets, did you configure any? Or maybe the token %s is not supported by this tool.', $assetToWithdraw));
     }
 
     protected function getActiveService(): WithdrawServiceInterface

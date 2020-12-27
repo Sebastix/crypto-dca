@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Tests\Jorijn\Bitcoin\Dca\Provider\Kraken;
 
-use Jorijn\Bitcoin\Dca\Provider\Kraken\BitcoinWithdrawAddressProvider;
+use Jorijn\Bitcoin\Dca\Provider\Kraken\KrakenWithdrawAddressProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Jorijn\Bitcoin\Dca\Provider\Kraken\BitcoinWithdrawAddressProvider
+ * @coversDefaultClass \Jorijn\Bitcoin\Dca\Provider\Kraken\KrakenWithdrawAddressProvider
  * @covers ::__construct
  *
  * @internal
  */
-final class BitcoinWithdrawAddressProviderTest extends TestCase
+final class KrakenWithdrawAddressProviderTest extends TestCase
 {
-    /** @var BitcoinWithdrawAddressProvider */
-    private BitcoinWithdrawAddressProvider $provider;
+    /** @var KrakenWithdrawAddressProvider */
+    private KrakenWithdrawAddressProvider $provider;
     private string $configuredAddress;
     private string $asset;
 
@@ -26,7 +26,7 @@ final class BitcoinWithdrawAddressProviderTest extends TestCase
 
         $this->configuredAddress = 'ca'.random_int(1000, 2000);
         $this->asset = 'XXBT';
-        $this->provider = new BitcoinWithdrawAddressProvider($this->configuredAddress, $this->asset);
+        $this->provider = new KrakenWithdrawAddressProvider($this->configuredAddress, $this->asset);
     }
 
     /**

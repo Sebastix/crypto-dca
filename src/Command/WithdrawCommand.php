@@ -31,7 +31,7 @@ class WithdrawCommand extends Command
                 'all',
                 'a',
                 InputOption::VALUE_NONE,
-                'If supplied, will withdraw all available Bitcoin to the configured address'
+                'If supplied, will withdraw all available assets to the configured address'
             )
             ->addOption(
                 'yes',
@@ -45,7 +45,7 @@ class WithdrawCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 'If supplied, will limit the withdrawal to the balance available for this tag'
             )
-            ->setDescription('Withdraw Bitcoin from the exchange')
+            ->setDescription('Withdraw asset from the exchange')
         ;
     }
 
@@ -75,7 +75,7 @@ class WithdrawCommand extends Command
 
         if (!$input->getOption('yes')) {
             $question = sprintf(
-                'Ready to withdraw %s %s to Address %s? A fee of %s %s will be taken as withdraw fee.',
+                'Ready to withdraw %s %s to address %s? A fee of %s %s will be taken as withdraw fee.',
                 $amountToWithdraw,
                 $assetToWithdraw,
                 $addressToWithdrawTo,

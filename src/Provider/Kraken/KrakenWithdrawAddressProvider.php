@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Jorijn\Bitcoin\Dca\Provider\Kraken;
 
-use Jorijn\Bitcoin\Dca\Provider\WithdrawAddressProviderInterface;
-
-class BitcoinWithdrawAddressProvider implements WithdrawAddressProviderInterface
+class KrakenWithdrawAddressProvider implements KrakenWithdrawAddressProviderInterface
 {
     protected ?string $configuredAddress;
     protected string $asset;
 
-    public function __construct(?string $configuredAddress, string $asset = 'XXBT')
+    public function __construct(?string $configuredAddress, string $asset)
     {
         $this->configuredAddress = $configuredAddress;
         $this->asset = $asset;

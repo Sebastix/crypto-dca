@@ -83,9 +83,9 @@ final class WithdrawCommandTest extends TestCase
         bool $unattended = false,
         bool $attendedOK = false,
         bool $expectWithdraw = false,
-        int $simulatedBalance = 0
+        float $simulatedBalance = 0
     ): void {
-        $asset = 'BTC';
+        $asset = 'XXBT';
         $address = 'address'.random_int(1000, 2000);
 
         $this->withdrawService

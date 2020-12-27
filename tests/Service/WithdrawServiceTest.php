@@ -203,7 +203,7 @@ final class WithdrawServiceTest extends TestCase
         float $expectedBalance
     ): void {
         $this->expectSupportedCheckToService();
-        $asset = 'BTC';
+        $asset = 'XXBT';
 
         $this->supportedService
             ->expects(static::once())
@@ -243,23 +243,11 @@ final class WithdrawServiceTest extends TestCase
         $address = self::ADDRESS.random_int(1000, 2000);
 
         $unsupportedAddressProvider = $this->createMock(WithdrawAddressProviderInterface::class);
-
-        $unsupportedAddressProvider
-          ->expects(static::exactly(2))
-          ->method('getAsset')
-          ->willThrowException(new \RuntimeException('test failure getAsset'))
-        ;
-
         $unsupportedAddressProvider
             ->expects(static::exactly(2))
             ->method('provide')
             ->willThrowException(new \RuntimeException('test failure provide'))
         ;
-
-        $this->addressProvider
-            ->expects(static::once())
-            ->method('getAsset')
-            ->willReturn($asset);
 
         $this->addressProvider
             ->expects(static::once())
@@ -296,7 +284,7 @@ final class WithdrawServiceTest extends TestCase
      */
     public function testNoExchangeAvailable(): void
     {
-        $asset = 'BTC';
+        $asset = 'XXBT';
         $unsupportedService = $this->createMock(WithdrawServiceInterface::class);
         $unsupportedService
             ->expects(static::once())

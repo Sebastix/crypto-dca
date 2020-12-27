@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jorijn\Bitcoin\Dca\Service\Kraken;
 
 use Jorijn\Bitcoin\Dca\Client\KrakenClientInterface;
+use Jorijn\Bitcoin\Dca\Exception\KrakenClientException;
 use Jorijn\Bitcoin\Dca\Model\CompletedWithdraw;
 use Jorijn\Bitcoin\Dca\Service\WithdrawServiceInterface;
 use Psr\Log\LoggerInterface;
@@ -35,9 +36,18 @@ class KrakenWithdrawService implements WithdrawServiceInterface
 
     public function getAvailableBalance(string $assetToWithdraw): float
     {
-      $balanceInfo = $this->client->queryPrivate('Balance');
+      try {
+        $response = $this->client->queryPrivate('Balance');
 
-      return (float) $balanceInfo[$assetToWithdraw];
+        foreach ($response as $symbol => $available) {
+          if ($assetToWithdraw === $symbol) {
+            return (float) $available;
+          }
+        }
+      } catch (KrakenClientException $exception) {
+        return (float)0;
+      }
+      return (float)0;
     }
 
     public function getWithdrawFee(string $asset, float $amountToWithdraw, string $addressToWithdrawTo): float
