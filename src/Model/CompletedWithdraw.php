@@ -8,9 +8,9 @@ class CompletedWithdraw
 {
     protected string $id;
     protected string $recipientAddress;
-    protected float $netAmount;
+    protected int $netAmount;
 
-    public function __construct(string $recipientAddress, float $netAmount, string $id)
+    public function __construct(string $recipientAddress, int $netAmount, string $id)
     {
         $this->id = $id;
         $this->recipientAddress = $recipientAddress;
@@ -22,7 +22,7 @@ class CompletedWithdraw
         return $this->recipientAddress;
     }
 
-    public function getNetAmount(): float
+    public function getNetAmount(): int
     {
         return $this->netAmount;
     }

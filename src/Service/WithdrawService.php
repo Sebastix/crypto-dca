@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jorijn\Bitcoin\Dca\Service;
 
-use Jorijn\Bitcoin\Dca\Client\Bl3pClientInterface;
 use Jorijn\Bitcoin\Dca\Event\WithdrawSuccessEvent;
 use Jorijn\Bitcoin\Dca\Exception\NoExchangeAvailableException;
 use Jorijn\Bitcoin\Dca\Exception\NoRecipientAddressAvailableException;
@@ -18,7 +17,6 @@ class WithdrawService
 {
     /** @var WithdrawAddressProviderInterface[] */
     protected iterable $addressProviders;
-    protected Bl3pClientInterface $client;
     protected TaggedIntegerRepositoryInterface $balanceRepository;
     protected EventDispatcherInterface $dispatcher;
     protected LoggerInterface $logger;
@@ -42,7 +40,7 @@ class WithdrawService
         $this->configuredExchange = $configuredExchange;
     }
 
-    public function getWithdrawFee(string $asset, float $amountToWithdraw, string $addressToWithdrawTo): float
+    public function getWithdrawFee(string $asset, int $amountToWithdraw, string $addressToWithdrawTo): int
     {
       return $this->getActiveService()->getWithdrawFee($asset, $amountToWithdraw, $addressToWithdrawTo);
     }
@@ -52,7 +50,7 @@ class WithdrawService
         return $this->getActiveService()->getWithdrawFeeInSatoshis();
     }
 
-    public function withdraw(string $asset, float $balanceToWithdraw, string $addressToWithdrawTo, string $tag = null): CompletedWithdraw
+    public function withdraw(string $asset, int $balanceToWithdraw, string $addressToWithdrawTo, string $tag = null): CompletedWithdraw
     {
         try {
             $completedWithdraw = $this->getActiveService()->withdraw($asset, $balanceToWithdraw, $addressToWithdrawTo);
@@ -86,7 +84,7 @@ class WithdrawService
         }
     }
 
-    public function getBalance(string $assetToWithdraw, string $tag = null): float
+    public function getBalance(string $assetToWithdraw, string $tag = null): int
     {
         $maxAvailableBalance = $this->getActiveService()->getAvailableBalance($assetToWithdraw);
 
@@ -129,5 +127,10 @@ class WithdrawService
         $this->logger->error($errorMessage);
 
         throw new NoExchangeAvailableException($errorMessage);
+    }
+
+    public function getExchange(): string
+    {
+      return $this->configuredExchange;
     }
 }

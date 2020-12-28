@@ -58,7 +58,7 @@ final class BuyCommandTest extends TestCase
         $commandTester->execute([
             self::COMMAND => $this->command->getName(),
             self::AMOUNT => 'string'.random_int(1000, 2000),
-            self::ASSET => 'XBT'
+            self::ASSET => 'XXBT'
         ]);
 
         static::assertStringContainsString('Amount should be numeric, e.g. 10', $commandTester->getDisplay(true));
@@ -71,7 +71,7 @@ final class BuyCommandTest extends TestCase
     public function testNotUnattendedAndNotConfirming(): void
     {
         $amount = random_int(1000, 2000);
-        $asset = "XBT";
+        $asset = "XXBT";
 
         // not buying
         $this->buyService->expects(static::never())->method('buy');
@@ -139,7 +139,7 @@ final class BuyCommandTest extends TestCase
     public function testBuyingFailsExceptionIsHandled(): void
     {
         $amount = random_int(1000, 2000);
-        $asset = "XBT";
+        $asset = "XXBT";
         $exception = new BuyTimeoutException('error'.random_int(1000, 2000));
 
         $this->buyService
@@ -170,7 +170,7 @@ final class BuyCommandTest extends TestCase
     protected function prepareBuyTest(?string $tag): array
     {
         $amount = random_int(1000, 2000);
-        $asset = "XBT";
+        $asset = "XXBT";
 
         $orderInformation = (new CompletedBuyOrder())
             ->setDisplayAmountBought(random_int(1000, 2000).' BTC')

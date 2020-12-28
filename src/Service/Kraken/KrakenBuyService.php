@@ -12,7 +12,9 @@ use Jorijn\Bitcoin\Dca\Service\BuyServiceInterface;
 
 class KrakenBuyService implements BuyServiceInterface
 {
-    private const SATOSHIS_IN_A_BITCOIN = '100000000';
+    public const FEE_STRATEGY_INCLUSIVE = 'include';
+    public const FEE_STRATEGY_EXCLUSIVE = 'exclude';
+
     protected string $lastUserRef;
     protected KrakenClientInterface $client;
     protected string $baseCurrency;
@@ -30,19 +32,26 @@ class KrakenBuyService implements BuyServiceInterface
 
   /**
    * @param int $amount
-   * @param bool $simulate
    *   Set this boolean to true to simulate an buy order - see https://support.kraken.com/hc/en-us/articles/360000919926-Does-Kraken-offer-an-API-test-environment-
    *
    * @return CompletedBuyOrder
    * @throws PendingBuyOrderException
    */
-    public function initiateBuy(int $amount, string $asset, bool $simulate = false): CompletedBuyOrder
+    public function initiateBuy(int $amount, string $asset): CompletedBuyOrder
     {
+        // Set this boolean to true to simulate an buy order - see https://support.kraken.com/hc/en-us/articles/360000919926-Does-Kraken-offer-an-API-test-environment-.
+        $simulate = getenv('KRAKEN_SIMULATE');
+        if ($simulate === null) {
+          $simulate = false;
+        }
+
         // generate a 32-bit singed integer to track this order
         $this->lastUserRef = (string) random_int(0, 0x7FFFFFFF);
 
         $assetInfo = $this->getAssetInfo($asset);
-        $volume = bcdiv((string) $amount, $this->getCurrentPrice($asset), $assetInfo['decimals']);
+
+        $volume =  $this->getAmountForStrategy($amount, self::FEE_STRATEGY_INCLUSIVE, $asset, $assetInfo['decimals']);
+
         // Check minimum order amount
         if ($volume < $this->getAssetPair($asset.$this->baseCurrency)['ordermin']) {
           $requiredMinimum = bcmul($this->getAssetPair($asset.$this->baseCurrency)['ordermin'], $this->getCurrentPrice($asset), 2);
@@ -112,6 +121,33 @@ class KrakenBuyService implements BuyServiceInterface
         ]);
 
         return $tickerInfo[array_key_first($tickerInfo)]['a'][0];
+    }
+
+    /**
+     * Calculated the amount with respect to the given strategy. If an amount of 150 EUR would be bought:.
+     *
+     * - exclusive: returns 150 / <current price> => 150,00 + 0,39 fee = net yield 150 cost 150,39
+     * - inclusive: returns (150 - 0,36) / <current price> => 150,00 - 0,36 = net yield 149,64 cost 149,99
+     */
+    protected function getAmountForStrategy(int $baseCurrencyAmount, string $feeStrategy, string $asset, int $decimals): string
+    {
+      $currentPrice = $this->getCurrentPrice($asset);
+
+      switch ($feeStrategy) {
+        case self::FEE_STRATEGY_EXCLUSIVE:
+          return bcdiv((string) $baseCurrencyAmount, $currentPrice, $decimals);
+
+        case self::FEE_STRATEGY_INCLUSIVE:
+        default:
+          $infoAssetPair = $this->getAssetPair($asset.$this->baseCurrency);
+          // Returns the fee percentage, taker side. Multiplied by 10000 to ensure rounded integer. 0.26 -> 2600.
+          $feePercentage = $infoAssetPair['fees'][0][1] ?? 0;
+          $feePercentage *= 10000;
+          $fee = $feePercentage / 10000;
+          $feeInBaseCurrency = ($baseCurrencyAmount / 100) * $fee;
+
+          return bcdiv((string) ($baseCurrencyAmount - $feeInBaseCurrency), $currentPrice, $decimals);
+      }
     }
 
     protected function getCompletedBuyOrder(string $orderId): CompletedBuyOrder

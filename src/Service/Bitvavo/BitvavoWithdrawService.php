@@ -22,7 +22,7 @@ class BitvavoWithdrawService implements WithdrawServiceInterface
         $this->logger = $logger;
     }
 
-    public function withdraw(string $asset, float $amountToWithdraw, string $addressToWithdrawTo): CompletedWithdraw
+    public function withdraw(string $asset, int $amountToWithdraw, string $addressToWithdrawTo): CompletedWithdraw
     {
         $netAmountToWithdraw = $amountToWithdraw - $this->getWithdrawFeeInSatoshis();
 
@@ -37,7 +37,7 @@ class BitvavoWithdrawService implements WithdrawServiceInterface
         return new CompletedWithdraw($addressToWithdrawTo, $netAmountToWithdraw, (string) time());
     }
 
-    public function getAvailableBalance(string $assetToWithdraw): float
+    public function getAvailableBalance(string $assetToWithdraw): int
     {
         $response = $this->client->apiCall('balance', 'GET', [self::SYMBOL => $assetToWithdraw]);
 
@@ -63,7 +63,7 @@ class BitvavoWithdrawService implements WithdrawServiceInterface
         return 'bitvavo' === $exchange;
     }
 
-    public function getWithdrawFee(string $asset, float $amountToWithdraw, string $addressToWithdrawTo): float
+    public function getWithdrawFee(string $asset, int $amountToWithdraw, string $addressToWithdrawTo): int
     {
       // TODO: Implement getWithdrawFee() method.
     }

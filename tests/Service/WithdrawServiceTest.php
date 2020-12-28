@@ -62,9 +62,9 @@ final class WithdrawServiceTest extends TestCase
     public function providerOfBalancesAndTags(): array
     {
         return [
-            'tag, exchange is limiting factor' => [(float)1000, 'tag'.random_int(1000, 2000), (float)2000, (float)1000],
-            'tag, tag is limiting factor' => [(float)3000, 'tag'.random_int(1000, 2000), (float)2000, (float)2000],
-            'no tag' => [(float)1000, null, null, (float)1000],
+            'tag, exchange is limiting factor' => [1000, 'tag'.random_int(1000, 2000), 2000, 1000],
+            'tag, tag is limiting factor' => [3000, 'tag'.random_int(1000, 2000), 2000, 2000],
+            'no tag' => [1000, null, null, 1000],
         ];
     }
 
@@ -106,8 +106,8 @@ final class WithdrawServiceTest extends TestCase
     {
         $this->expectSupportedCheckToService();
 
-        $asset = 'BTC';
-        $balance = (float)random_int(1000, 2000);
+        $asset = 'XXBT';
+        $balance = random_int(1000, 2000);
         $address = self::ADDRESS.random_int(1000, 2000);
         $id = 'id'.random_int(1000, 2000);
 
@@ -157,8 +157,8 @@ final class WithdrawServiceTest extends TestCase
     {
         $this->expectSupportedCheckToService();
 
-        $asset = 'BTC';
-        $balance = (float)random_int(1000, 2000);
+        $asset = 'XXBT';
+        $balance = random_int(1000, 2000);
         $address = self::ADDRESS.random_int(1000, 2000);
 
         $this->logger
@@ -197,10 +197,10 @@ final class WithdrawServiceTest extends TestCase
      * @dataProvider providerOfBalancesAndTags
      */
     public function testGetBalanceForActiveExchange(
-        float $exchangeBalance,
+        int $exchangeBalance,
         ?string $tag,
-        ?float $taggedBalance,
-        float $expectedBalance
+        ?int $taggedBalance,
+        int $expectedBalance
     ): void {
         $this->expectSupportedCheckToService();
         $asset = 'XXBT';

@@ -61,7 +61,7 @@ class BuyCommand extends Command
         $assetToBuy = strtoupper($assetToBuy);
 
         if (!$input->getOption('yes') && !$io->confirm(
-            'Are you sure you want to place an order for '.$this->baseCurrency.' '.$amount.'?',
+            'Are you sure you want to place an order for '.$this->baseCurrency.' '.$amount.' for buying asset '. $assetToBuy .'?',
             false
         )) {
             return 0;

@@ -83,7 +83,7 @@ final class WithdrawCommandTest extends TestCase
         bool $unattended = false,
         bool $attendedOK = false,
         bool $expectWithdraw = false,
-        float $simulatedBalance = 0
+        int $simulatedBalance = 0
     ): void {
         $asset = 'XXBT';
         $address = 'address'.random_int(1000, 2000);
@@ -91,8 +91,7 @@ final class WithdrawCommandTest extends TestCase
         $this->withdrawService
             ->expects(static::once())
             ->method('getBalance')
-            ->with($asset)
-            ->with($tag)
+            ->with($asset, $tag)
             ->willReturn($simulatedBalance)
         ;
 

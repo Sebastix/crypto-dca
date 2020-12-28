@@ -14,6 +14,7 @@ class KrakenWithdrawService implements WithdrawServiceInterface
 {
     protected KrakenClientInterface $client;
     protected LoggerInterface $logger;
+    protected string $asset;
 
     public function __construct(KrakenClientInterface $client, LoggerInterface $logger)
     {
@@ -21,7 +22,7 @@ class KrakenWithdrawService implements WithdrawServiceInterface
         $this->logger = $logger;
     }
 
-    public function withdraw(string $asset, float $amountToWithdraw, string $addressToWithdrawTo): CompletedWithdraw
+    public function withdraw(string $asset, int $amountToWithdraw, string $addressToWithdrawTo): CompletedWithdraw
     {
         $netAmountToWithdraw = $amountToWithdraw - $this->getWithdrawFee($asset, $amountToWithdraw, $addressToWithdrawTo);
         // https://www.kraken.com/features/api#withdraw-funds
@@ -34,23 +35,26 @@ class KrakenWithdrawService implements WithdrawServiceInterface
         return new CompletedWithdraw($addressToWithdrawTo, $netAmountToWithdraw, $response['refid']);
     }
 
-    public function getAvailableBalance(string $assetToWithdraw): float
+    public function getAvailableBalance(string $assetToWithdraw): int
     {
       try {
         $response = $this->client->queryPrivate('Balance');
 
         foreach ($response as $symbol => $available) {
           if ($assetToWithdraw === $symbol) {
-            return (float) $available;
+            $assetInfo = $this->getAssetInfo($assetToWithdraw);
+            $divisor = str_pad('1', $assetInfo['decimals'], '0') . '0';
+
+            return (int) bcmul($available, $divisor, $assetInfo['decimals']);
           }
         }
       } catch (KrakenClientException $exception) {
-        return (float)0;
+        return 0;
       }
-      return (float)0;
+      return 0;
     }
 
-    public function getWithdrawFee(string $asset, float $amountToWithdraw, string $addressToWithdrawTo): float
+    public function getWithdrawFee(string $asset, int $amountToWithdraw, string $addressToWithdrawTo): int
     {
       /**
        * https://support.kraken.com/hc/en-us/articles/360000767986-Cryptocurrency-withdrawal-fees-and-minimums
@@ -62,18 +66,29 @@ class KrakenWithdrawService implements WithdrawServiceInterface
         'amount' => $amountToWithdraw
       ]);
 
-      return (float) $withDrawInfo['fee'];
+      $assetInfo = $this->getAssetInfo($asset);
+      $divisor = str_pad('1', $assetInfo['decimals'], '0') . '0';
+
+      return (int) bcmul($withDrawInfo['fee'], $divisor, $assetInfo['decimals']);
     }
 
     public function getWithdrawFeeInSatoshis(): int
     {
-      // TODO: recalculate to satoshis.
+      // TODO: recalculate asset to to satoshis.
       return 0;
     }
 
     public function supportsExchange(string $exchange): bool
     {
         return 'kraken' === $exchange;
+    }
+
+    protected function getAssetInfo(string $asset){
+      $assetInfo = $this->client->queryPublic('Assets', [
+        'asset' => $asset
+      ]);
+
+      return $assetInfo[array_key_first($assetInfo)];
     }
 
 }

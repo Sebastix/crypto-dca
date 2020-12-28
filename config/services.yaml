@@ -170,7 +170,6 @@ services:
     class: Jorijn\Bitcoin\Dca\Provider\Kraken\KrakenWithdrawAddressProvider
     arguments:
       - '%env(string:KRAKEN_WITHDRAW_ADDRESS_XXBT)%'
-      - 'XXBT'
     tags:
       - { name: 'withdraw-address-provider', priority: -3000 }
 
@@ -178,7 +177,6 @@ services:
     class: Jorijn\Bitcoin\Dca\Provider\Kraken\KrakenWithdrawAddressProvider
     arguments:
       - '%env(string:KRAKEN_WITHDRAW_ADDRESS_ETH)%'
-      - 'ETH'
     tags:
       - { name: 'withdraw-address-provider', priority: -2500 }
 
@@ -186,7 +184,6 @@ services:
     class: Jorijn\Bitcoin\Dca\Provider\Kraken\KrakenWithdrawAddressProvider
     arguments:
       - '%env(string:KRAKEN_WITHDRAW_ADDRESS_ADA)%'
-      - 'ADA'
     tags:
       - { name: 'withdraw-address-provider', priority: -2000 }
 

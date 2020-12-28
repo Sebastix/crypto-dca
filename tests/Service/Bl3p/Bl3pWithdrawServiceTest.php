@@ -48,7 +48,7 @@ final class Bl3pWithdrawServiceTest extends TestCase
      */
     public function testGetBalance(): void
     {
-        $balance = (float)random_int(1000, 2000);
+        $balance = random_int(1000, 2000);
 
         $this->client
             ->expects(static::once())
@@ -69,7 +69,7 @@ final class Bl3pWithdrawServiceTest extends TestCase
     {
         $asset = 'BTC';
         $address = self::ADDRESS.random_int(1000, 2000);
-        $amount = (float)random_int(100000, 300000);
+        $amount = random_int(100000, 300000);
         $netAmount = $amount - $this->service->getWithdrawFeeInSatoshis();
         $withdrawID = 'id'.random_int(1000, 2000);
         $apiResponse = ['data' => ['id' => $withdrawID]];
@@ -116,7 +116,7 @@ final class Bl3pWithdrawServiceTest extends TestCase
         static::assertSame(30000, $this->service->getWithdrawFeeInSatoshis());
     }
 
-    private function createBalanceStructure(float $balance): array
+    private function createBalanceStructure(int $balance): array
     {
         return [
             'data' => [

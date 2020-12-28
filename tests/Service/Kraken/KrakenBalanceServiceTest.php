@@ -50,7 +50,7 @@ final class KrakenBalanceServiceTest extends TestCase
       ->with('Balance')
       ->willReturn(
         [
-          'BTC' => '3',
+          'XXBT' => '3',
           'EUR' => '2',
         ]
       )
@@ -59,7 +59,7 @@ final class KrakenBalanceServiceTest extends TestCase
     $result = $this->balanceService->getBalances();
 
     static::assertSame([
-      ['BTC', '3 BTC', '3 BTC'],
+      ['XXBT', '3 XXBT', '3 XXBT'],
       ['EUR', '2 EUR', '2 EUR'],
     ], $result);
   }

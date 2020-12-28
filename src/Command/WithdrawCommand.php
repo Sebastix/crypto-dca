@@ -76,10 +76,10 @@ class WithdrawCommand extends Command
         if (!$input->getOption('yes')) {
             $question = sprintf(
                 'Ready to withdraw %s %s to address %s? A fee of %s %s will be taken as withdraw fee.',
-                $amountToWithdraw,
+                $amountToWithdraw / 100000000,
                 $assetToWithdraw,
                 $addressToWithdrawTo,
-                $this->withdrawService->getWithdrawFee($assetToWithdraw, $amountToWithdraw, $addressToWithdrawTo),
+                $this->withdrawService->getWithdrawFee($assetToWithdraw, $amountToWithdraw, $addressToWithdrawTo) / 100000000,
                 $assetToWithdraw
             );
 
