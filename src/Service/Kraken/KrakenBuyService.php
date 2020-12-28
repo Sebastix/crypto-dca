@@ -42,7 +42,7 @@ class KrakenBuyService implements BuyServiceInterface
         // Set this boolean to true to simulate an buy order - see https://support.kraken.com/hc/en-us/articles/360000919926-Does-Kraken-offer-an-API-test-environment-.
         $simulate = getenv('KRAKEN_SIMULATE');
         if ($simulate === null) {
-          $simulate = false;
+          $simulate = 0;
         }
 
         // generate a 32-bit singed integer to track this order
@@ -55,7 +55,7 @@ class KrakenBuyService implements BuyServiceInterface
         // Check minimum order amount
         if ($volume < $this->getAssetPair($asset.$this->baseCurrency)['ordermin']) {
           $requiredMinimum = bcmul($this->getAssetPair($asset.$this->baseCurrency)['ordermin'], $this->getCurrentPrice($asset), 2);
-          throw new KrakenClientException(sprintf('Your amount is too low. A minimum of %s %d is required.', $this->baseCurrency, ceil($requiredMinimum)));
+          throw new KrakenClientException(sprintf('The amount you would like to buy is too low. A minimum of %s %d is required.', $this->baseCurrency, ceil($requiredMinimum)));
         }
 
         $addedOrder = $this->client->queryPrivate('AddOrder', [
