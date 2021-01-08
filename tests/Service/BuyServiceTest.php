@@ -74,7 +74,7 @@ final class BuyServiceTest extends TestCase
     {
         $buyOrderDTO = new CompletedBuyOrder();
         $amount = random_int(1000, 2000);
-        $asset = 'XBT';
+        $asset = 'XXBT';
         $orderId = 'oid'.random_int(1000, 2000);
         $start = time();
         $tag = 'tag'.random_int(1000, 2000);

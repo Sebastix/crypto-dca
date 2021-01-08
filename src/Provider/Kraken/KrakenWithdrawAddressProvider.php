@@ -23,6 +23,7 @@ class KrakenWithdrawAddressProvider implements KrakenWithdrawAddressProviderInte
     public function setAsset(string $configuredAddress)
     {
         $envVariables = getenv();
+        $asset = '';
         foreach ($envVariables as $varKey => $varValue){
             // Match Kraken withdraw addresses.
             if(0 === strpos($varKey, "KRAKEN_WITHDRAW_ADDRESS_")) {
