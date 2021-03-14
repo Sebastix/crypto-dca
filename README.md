@@ -16,7 +16,7 @@ I made this fork to support multiple assets from the Kraken exchange.
 |------|------|------|
 | Kraken | https://kraken.com/ | EUR |
 
-## Supported assets
+## Supported assets for withdrawing
 | Assets name | Token
 |------|------|
 |Bitcoin|BTC or XBT|
@@ -33,13 +33,21 @@ The DCA tool is built with flexibility in mind, allowing you to specify your own
 
 ## How to use this tool
 Please read the documentation from Bitcoin-DCA: [https://bitcoin-dca.readthedocs.io/en/latest/](https://bitcoin-dca.readthedocs.io/en/latest/) for all details you need to get started with this software.
-In this fork, the commands you use for buying and withdrawing are slighty different:
+In this fork, the commands you use for buying and withdrawing are slightly different.
 
-Buy an assets (buy for 100 euro of asset X)   
-`docker-compose exec dca php bin/bitcoin-dca buy 100 <asset>`
+#### Build the Docker image
+```
+cd ~
+git clone https://github.com/Sebastix/crypto-dca.git
+cd crypto-dca
+docker build . -t sebastix/crypto-dca:latest
+```
+
+Buy an asset (buy for 100 euro of asset X):   
+`docker run --rm -it --env-file=/home/bob/crypto-dca/.env sebastix/crypto-dca:latest buy 100 <asset>`
 
 Withdraw all your chosen assets from your account to your wallet address:  
-`docker-compose exec dca php bin/bitcoin-dca withdraw <asset> --all`
+`docker run --rm -it --env-file=/home/bob/crypto-dca/.env sebastix/crypto-dca:latest withdraw <asset> --all`
 
 ## Development
 See [docker/development/README.md](docker/development/README.md)
