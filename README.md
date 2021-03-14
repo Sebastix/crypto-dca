@@ -24,7 +24,10 @@ The DCA tool is built with flexibility in mind, allowing you to specify your own
 * Buy each week but withdraw only at the end of the month to save on withdrawal fees.
 
 ## How to use this tool
+@TODO add instructions
 
+## Development
+See [docker/development/README.md](docker/development/README.md)
 
 ## Support
 You can visit the Bitcoin DCA Support channel on Telegram: https://t.me/bitcoindca
