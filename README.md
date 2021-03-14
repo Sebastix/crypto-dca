@@ -14,7 +14,7 @@ I made this fork to support buying any asset which is provided on the Kraken exc
 ## Supported Exchanges
 | Exchange | URL | Currencies |
 |------|------|------|
-| Kraken | https://kraken.com/ | EUR |
+| Kraken | https://kraken.com/ | USD EUR CAD JPY GBP CHF AUD |
 
 ## Supported assets for withdrawing
 | Assets name | Token
