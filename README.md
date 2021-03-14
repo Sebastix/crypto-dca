@@ -22,6 +22,7 @@ I made this fork to support buying any asset which is provided on the Kraken exc
 |Bitcoin|BTC or XBT|
 |Ethereum|ETH|
 |Cardano|ADA|
+
 Feel free to submit a request for other assets by adding a feature request issue: https://github.com/Sebastix/crypto-dca/issues/new/choose
 
 ## About this software
