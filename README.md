@@ -16,6 +16,14 @@ I made this fork to support multiple assets from the Kraken exchange.
 |------|------|------|
 | Kraken | https://kraken.com/ | EUR |
 
+## Supported assets
+| Assets name | Token
+|------|------|
+|Bitcoin|BTC or XBT|
+|Ethereum|ETH|
+|Cardano|ADA|
+Feel free to submit a request for other assets by adding adding a feature request issue: https://github.com/Sebastix/crypto-dca/issues/new/choose
+
 ## About this software
 The DCA tool is built with flexibility in mind, allowing you to specify your own schedule of buying and withdrawing. A few examples that are possible:
 
@@ -24,7 +32,14 @@ The DCA tool is built with flexibility in mind, allowing you to specify your own
 * Buy each week but withdraw only at the end of the month to save on withdrawal fees.
 
 ## How to use this tool
-@TODO add instructions
+Please read the documentation from Bitcoin-DCA: [https://bitcoin-dca.readthedocs.io/en/latest/](https://bitcoin-dca.readthedocs.io/en/latest/) for all details you need to get started with this software.
+In this fork, the commands you use for buying and withdrawing are slighty different:
+
+Buy an assets (buy for 100 euro of asset X)   
+`docker-compose exec dca php bin/bitcoin-dca buy 100 <asset>`
+
+Withdraw all your chosen assets from your account to your wallet address:  
+`docker-compose exec dca php bin/bitcoin-dca withdraw <asset> --all`
 
 ## Development
 See [docker/development/README.md](docker/development/README.md)
@@ -33,6 +48,8 @@ See [docker/development/README.md](docker/development/README.md)
 You can visit the Bitcoin DCA Support channel on Telegram: https://t.me/bitcoindca
 
 ## Contributing
-Contributions are highly welcome! Feel free to submit issues and pull requests on https://github.com/jorijn/bitcoin-dca.
+Contributions are highly welcome! Feel free to submit issues and pull requests on https://github.com/jorijn/bitcoin-dca or on this fork https://github.com/Sebastix/crypto-dca
 
-Like the work of Jorijn? Buy him a 🍺 by sending some sats to `bc1quqjfmnldh9nfnxpucyvxh9pc63jyp0qdkpmf32`.
+Like the work of Jorijn? Buy him a 🍺 by sending some sats.  
+Onchain: `bc1quqjfmnldh9nfnxpucyvxh9pc63jyp0qdkpmf32`  
+Lightning: `03e85b676b0e8c84088525a1377b075dc4e12197bf2974529a3a5fdbfb47e957a2`

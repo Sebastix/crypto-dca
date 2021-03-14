@@ -26,7 +26,7 @@ final class KrakenWithdrawAddressProviderTest extends TestCase
 
         $this->configuredAddress = 'ca'.random_int(1000, 2000);
         $this->asset = 'XXBT';
-        $this->provider = new KrakenWithdrawAddressProvider($this->configuredAddress);
+        $this->provider = new KrakenWithdrawAddressProvider($this->configuredAddress, $this->asset);
     }
 
     /**

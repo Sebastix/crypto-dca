@@ -9,10 +9,10 @@ class KrakenWithdrawAddressProvider implements KrakenWithdrawAddressProviderInte
     protected ?string $configuredAddress;
     protected string $asset;
 
-    public function __construct(?string $configuredAddress)
+    public function __construct(?string $configuredAddress, string $asset)
     {
         $this->configuredAddress = $configuredAddress;
-        $this->setAsset($configuredAddress);
+        $this->setAsset($asset);
     }
 
     public function provide(): string
@@ -20,22 +20,8 @@ class KrakenWithdrawAddressProvider implements KrakenWithdrawAddressProviderInte
         return $this->configuredAddress;
     }
 
-    public function setAsset(string $configuredAddress)
+    public function setAsset(string $asset)
     {
-        $envVariables = getenv();
-        $asset = '';
-        foreach ($envVariables as $varKey => $varValue){
-            // Match Kraken withdraw addresses.
-            if(0 === strpos($varKey, "KRAKEN_WITHDRAW_ADDRESS_")) {
-                if(getenv($varKey) === $configuredAddress) {
-                    // String to array conversion.
-                    $arr = explode('_', $varKey);
-                    // Get last element which is the asset of the provided address.
-                    $asset = end($arr);
-                }
-
-            }
-        }
         $this->asset = $asset;
     }
 
