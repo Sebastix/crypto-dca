@@ -4,17 +4,11 @@
 
 # Automated Crypto DCA tool for multiple exchanges
 
-![Docker Pulls](https://img.shields.io/docker/pulls/jorijn/bitcoin-dca)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Jorijn_bitcoin-dca&metric=alert_status)](https://sonarcloud.io/dashboard?id=Jorijn_bitcoin-dca)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Jorijn_bitcoin-dca&metric=coverage)](https://sonarcloud.io/dashboard?id=Jorijn_bitcoin-dca)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=Jorijn_bitcoin-dca&metric=ncloc)](https://sonarcloud.io/dashboard?id=Jorijn_bitcoin-dca)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Jorijn_bitcoin-dca&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=Jorijn_bitcoin-dca)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Jorijn_bitcoin-dca&metric=security_rating)](https://sonarcloud.io/dashboard?id=Jorijn_bitcoin-dca)
-
 _Please be aware this is beta software. Test thoroughly with small amounts of money at first. This software is provided "as is" and comes without warranty. See [LICENSE](LICENSE)._
 
 ## This is a fork of Bitcoin DCA tool
-Forked from https://github.com/Jorijn/bitcoin-dca
+Forked from https://github.com/Jorijn/bitcoin-dca  
+I made this fork to support multiple assets from the Kraken exchange.
 
 ## Requirements
 * You need to have an account on a supported exchange;
