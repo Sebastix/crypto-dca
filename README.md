@@ -1,10 +1,10 @@
-# Work in progress - Automated cryptocurrency DCA tool
+# Work in progress - Automated DCA tool for buying any crypto asset on Kraken
 
 _Please be aware this is work in progress software. Test thoroughly with small amounts of money at first. This software is provided "as is" and comes without warranty. See [LICENSE](LICENSE)._
 
 ## This is a fork of Bitcoin DCA tool made by Jorijn
 Forked from https://github.com/Jorijn/bitcoin-dca  
-I made this fork to support buying multiple assets from the Kraken exchange.
+I made this fork to support buying any asset which is provided on the Kraken exchange.
 
 ## Requirements
 * You need to have an account on a supported exchange;
@@ -22,7 +22,7 @@ I made this fork to support buying multiple assets from the Kraken exchange.
 |Bitcoin|BTC or XBT|
 |Ethereum|ETH|
 |Cardano|ADA|
-Feel free to submit a request for other assets by adding adding a feature request issue: https://github.com/Sebastix/crypto-dca/issues/new/choose
+Feel free to submit a request for other assets by adding a feature request issue: https://github.com/Sebastix/crypto-dca/issues/new/choose
 
 ## About this software
 The DCA tool is built with flexibility in mind, allowing you to specify your own schedule of buying and withdrawing. A few examples that are possible:
