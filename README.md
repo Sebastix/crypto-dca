@@ -1,15 +1,15 @@
-# Automated Crypto DCA tool for multiple exchanges
+# Work in progress - Automated cryptocurrency DCA tool
 
-_Please be aware this is beta software. Test thoroughly with small amounts of money at first. This software is provided "as is" and comes without warranty. See [LICENSE](LICENSE)._
+_Please be aware this is work in progress software. Test thoroughly with small amounts of money at first. This software is provided "as is" and comes without warranty. See [LICENSE](LICENSE)._
 
-## This is a fork of Bitcoin DCA tool
+## This is a fork of Bitcoin DCA tool made by Jorijn
 Forked from https://github.com/Jorijn/bitcoin-dca  
-I made this fork to support multiple assets from the Kraken exchange.
+I made this fork to support buying multiple assets from the Kraken exchange.
 
 ## Requirements
 * You need to have an account on a supported exchange;
 * You need to have Docker installed: https://docs.docker.com/get-docker/;
-* You need to have an API key active on a supported exchange. It needs **read**, **trade** and **withdraw** permission.
+* You need to have an API key. It needs **read**, **trade** and **withdraw** permission.
 
 ## Supported Exchanges
 | Exchange | URL | Currencies |
