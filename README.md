@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="/resources/images/logo.png?raw=true">
-</p>
-
 # Automated Crypto DCA tool for multiple exchanges
 
 _Please be aware this is beta software. Test thoroughly with small amounts of money at first. This software is provided "as is" and comes without warranty. See [LICENSE](LICENSE)._
