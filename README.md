@@ -14,8 +14,6 @@ I made this fork to support multiple assets from the Kraken exchange.
 ## Supported Exchanges
 | Exchange | URL | Currencies |
 |------|------|------|
-| BL3P | https://bl3p.eu/ | EUR |
-| Bitvavo | https://bitvavo.com/ | EUR |
 | Kraken | https://kraken.com/ | EUR |
 
 ## About this software
