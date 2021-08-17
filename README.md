@@ -36,19 +36,23 @@ The DCA tool is built with flexibility in mind, allowing you to specify your own
 Please read the documentation from Bitcoin-DCA: [https://bitcoin-dca.readthedocs.io/en/latest/](https://bitcoin-dca.readthedocs.io/en/latest/) for all details you need to get started with this software.
 In this fork, the commands you use for buying and withdrawing are slightly different.
 
-#### Build the Docker image
+Test if the application is working:
+`docker run --rm -it --env-file=/home/bob/crypto-dca/.env ghcr.io/sebastix/crypto-dca:latest balance`
+If everything is working, you will see the balance of your exchange account.
+
+Buy an asset (buy for 100 euro of asset X):   
+`docker run --rm -it --env-file=/home/bob/crypto-dca/.env ghcr.io/sebastix/crypto-dca:latest buy 100 <asset>`
+
+Withdraw all your chosen assets from your account to your wallet address:  
+`docker run --rm -it --env-file=/home/bob/crypto-dca/.env ghcr.io/sebastix/crypto-dca:latest withdraw <asset> --all`
+
+#### Build the Docker image locally
 ```
 cd ~
 git clone https://github.com/Sebastix/crypto-dca.git
 cd crypto-dca
-docker build . -t sebastix/crypto-dca:latest
+docker build . -t ghcr.io/sebastix/crypto-dca:latest
 ```
-
-Buy an asset (buy for 100 euro of asset X):   
-`docker run --rm -it --env-file=/home/bob/crypto-dca/.env sebastix/crypto-dca:latest buy 100 <asset>`
-
-Withdraw all your chosen assets from your account to your wallet address:  
-`docker run --rm -it --env-file=/home/bob/crypto-dca/.env sebastix/crypto-dca:latest withdraw <asset> --all`
 
 ## Development
 See [docker/development/README.md](docker/development/README.md)
