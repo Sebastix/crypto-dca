@@ -19,6 +19,9 @@ parameters:
   env(KRAKEN_API_KEY): ~
   env(KRAKEN_PRIVATE_KEY): ~
   env(KRAKEN_WITHDRAW_DESCRIPTION): ~
+  env(KRAKEN_WITHDRAW_ADDRESS_XXBT): ~
+  env(KRAKEN_WITHDRAW_ADDRESS_ETH): ~
+  env(KRAKEN_WITHDRAW_ADDRESS_ADA): ~
   env(KRAKEN_FEE_STRATEGY): 'include'
 
   # generic application settings
