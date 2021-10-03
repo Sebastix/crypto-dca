@@ -103,7 +103,9 @@ class WithdrawService
         // Return configured address by asset.
         foreach ($this->addressProviders as $addressProvider) {
             try {
-                return $addressProvider->provide();
+                if ($addressProvider->getAsset() == $assetToWithdraw) {
+                    return $addressProvider->provide();
+                }
             } catch (\Throwable $exception) {
                 // allowed to fail
             }
