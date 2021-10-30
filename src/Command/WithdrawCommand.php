@@ -66,6 +66,8 @@ class WithdrawCommand extends Command
 
         $amountToWithdraw = $this->withdrawService->getBalance($assetToWithdraw, $input->getOption('tag'));
         $addressToWithdrawTo = $this->withdrawService->getRecipientAddress($assetToWithdraw);
+        $assetInfo = $this->withdrawService->getAssetInfo($assetToWithdraw);
+        $divisor = str_pad('1', $assetInfo['decimals'], '0') . '0';
 
         if (0 === $amountToWithdraw) {
             $io->error('No balance available, better start saving something!');
@@ -76,10 +78,10 @@ class WithdrawCommand extends Command
         if (!$input->getOption('yes')) {
             $question = sprintf(
                 'Ready to withdraw %s %s to address %s? A fee of %s %s will be taken as withdraw fee.',
-                $amountToWithdraw / 100000000,
+                $amountToWithdraw / $divisor,
                 $assetToWithdraw,
                 $addressToWithdrawTo,
-                $this->withdrawService->getWithdrawFee($assetToWithdraw, $amountToWithdraw, $addressToWithdrawTo) / 100000000,
+                $this->withdrawService->getWithdrawFee($assetToWithdraw, $amountToWithdraw, $addressToWithdrawTo) / $divisor,
                 $assetToWithdraw
             );
 

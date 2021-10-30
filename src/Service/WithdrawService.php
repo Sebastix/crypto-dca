@@ -50,6 +50,11 @@ class WithdrawService
         return $this->getActiveService()->getWithdrawFeeInSatoshis();
     }
 
+    public function getAssetInfo(string $asset)
+    {
+        return $this->getActiveService()->getAssetInfo($asset);
+    }
+
     public function withdraw(string $asset, int $balanceToWithdraw, string $addressToWithdrawTo, string $tag = null): CompletedWithdraw
     {
         try {
