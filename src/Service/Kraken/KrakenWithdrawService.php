@@ -13,16 +13,15 @@ use Psr\Log\LoggerInterface;
 class KrakenWithdrawService implements WithdrawServiceInterface
 {
 
-  public static $ASSETS = array("ETH"=>"XETH", "ADA"=>"ADA", "XBT"=>"XXBT");
-
     protected KrakenClientInterface $client;
     protected LoggerInterface $logger;
     protected string $asset;
 
-    public function __construct(KrakenClientInterface $client, LoggerInterface $logger)
+    public function __construct(KrakenClientInterface $client, LoggerInterface $logger, array $ASSETS)
     {
         $this->client = $client;
         $this->logger = $logger;
+        $this->ASSETS = $ASSETS;
     }
 
     public function withdraw(string $asset, int $amountToWithdraw, string $addressToWithdrawTo): CompletedWithdraw
@@ -45,7 +44,7 @@ class KrakenWithdrawService implements WithdrawServiceInterface
       try {
         $response = $this->client->queryPrivate('Balance');
 
-        $assetToWithdraw = self::$ASSETS[$assetToWithdraw];
+        $assetToWithdraw = $this->ASSETS[$assetToWithdraw];
 
         foreach ($response as $symbol => $available) {
           if ($assetToWithdraw === $symbol) {

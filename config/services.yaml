@@ -348,6 +348,7 @@ services:
     arguments:
       - '@api.client.kraken'
       - '@logger'
+      - { ETH: XETH, ADA: ADA, XBT: XXBT }
     tags:
       - { name: exchange-withdraw-service }
 
