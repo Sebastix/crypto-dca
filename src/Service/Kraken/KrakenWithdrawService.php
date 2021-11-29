@@ -13,15 +13,16 @@ use Psr\Log\LoggerInterface;
 class KrakenWithdrawService implements WithdrawServiceInterface
 {
 
-    protected KrakenClientInterface $client;
-    protected LoggerInterface $logger;
-    protected string $asset;
+  protected KrakenClientInterface $client;
+  protected LoggerInterface $logger;
+  protected string $asset;
+  private array $assets;
 
-    public function __construct(KrakenClientInterface $client, LoggerInterface $logger, array $ASSETS)
+  public function __construct(KrakenClientInterface $client, LoggerInterface $logger, array $assets)
     {
         $this->client = $client;
         $this->logger = $logger;
-        $this->ASSETS = $ASSETS;
+        $this->assets = $assets;
     }
 
     public function withdraw(string $asset, int $amountToWithdraw, string $addressToWithdrawTo): CompletedWithdraw
@@ -30,13 +31,12 @@ class KrakenWithdrawService implements WithdrawServiceInterface
       $assetInfo = $this->getAssetInfo($asset);
       $divisor = str_pad('1', $assetInfo['decimals'], '0') . '0';
       // https://www.kraken.com/features/api#withdraw-funds
-        $response = $this->client->queryPrivate('Withdraw', [
-          'asset' => $asset,
-          'key' => $addressToWithdrawTo,
-          'amount' => bcdiv((string) $netAmountToWithdraw, $divisor, $assetInfo['display_decimals'])
-        ]);
-
-        return new CompletedWithdraw($addressToWithdrawTo, $netAmountToWithdraw, $response['refid']);
+      $response = $this->client->queryPrivate('Withdraw', [
+        'asset' => $asset,
+        'key' => $addressToWithdrawTo,
+        'amount' => bcdiv((string) $netAmountToWithdraw, $divisor, $assetInfo['display_decimals'])
+      ]);
+      return new CompletedWithdraw($addressToWithdrawTo, $netAmountToWithdraw, $response['refid']);
     }
 
     public function getAvailableBalance(string $assetToWithdraw): int
@@ -44,7 +44,7 @@ class KrakenWithdrawService implements WithdrawServiceInterface
       try {
         $response = $this->client->queryPrivate('Balance');
 
-        $assetToWithdraw = $this->ASSETS[$assetToWithdraw];
+        $assetToWithdraw = $this->assets[$assetToWithdraw];
 
         foreach ($response as $symbol => $available) {
           if ($assetToWithdraw === $symbol) {
