@@ -12,24 +12,28 @@ use Psr\Log\LoggerInterface;
 
 class KrakenWithdrawService implements WithdrawServiceInterface
 {
+
     protected KrakenClientInterface $client;
     protected LoggerInterface $logger;
     protected string $asset;
 
-    public function __construct(KrakenClientInterface $client, LoggerInterface $logger)
+    public function __construct(KrakenClientInterface $client, LoggerInterface $logger, array $ASSETS)
     {
         $this->client = $client;
         $this->logger = $logger;
+        $this->ASSETS = $ASSETS;
     }
 
     public function withdraw(string $asset, int $amountToWithdraw, string $addressToWithdrawTo): CompletedWithdraw
     {
-        $netAmountToWithdraw = $amountToWithdraw - $this->getWithdrawFee($asset, $amountToWithdraw, $addressToWithdrawTo);
-        // https://www.kraken.com/features/api#withdraw-funds
+      $netAmountToWithdraw = $amountToWithdraw - $this->getWithdrawFee($asset, $amountToWithdraw, $addressToWithdrawTo);
+      $assetInfo = $this->getAssetInfo($asset);
+      $divisor = str_pad('1', $assetInfo['decimals'], '0') . '0';
+      // https://www.kraken.com/features/api#withdraw-funds
         $response = $this->client->queryPrivate('Withdraw', [
           'asset' => $asset,
           'key' => $addressToWithdrawTo,
-          'amount' => $amountToWithdraw
+          'amount' => bcdiv((string) $netAmountToWithdraw, $divisor, $assetInfo['display_decimals'])
         ]);
 
         return new CompletedWithdraw($addressToWithdrawTo, $netAmountToWithdraw, $response['refid']);
@@ -40,11 +44,12 @@ class KrakenWithdrawService implements WithdrawServiceInterface
       try {
         $response = $this->client->queryPrivate('Balance');
 
+        $assetToWithdraw = $this->ASSETS[$assetToWithdraw];
+
         foreach ($response as $symbol => $available) {
           if ($assetToWithdraw === $symbol) {
             $assetInfo = $this->getAssetInfo($assetToWithdraw);
             $divisor = str_pad('1', $assetInfo['decimals'], '0') . '0';
-
             return (int) bcmul($available, $divisor, $assetInfo['decimals']);
           }
         }
@@ -83,11 +88,11 @@ class KrakenWithdrawService implements WithdrawServiceInterface
         return 'kraken' === $exchange;
     }
 
-    protected function getAssetInfo(string $asset){
+    public function getAssetInfo(string $asset)
+    {
       $assetInfo = $this->client->queryPublic('Assets', [
         'asset' => $asset
       ]);
-
       return $assetInfo[array_key_first($assetInfo)];
     }
 

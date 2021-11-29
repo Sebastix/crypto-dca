@@ -50,6 +50,11 @@ class WithdrawService
         return $this->getActiveService()->getWithdrawFeeInSatoshis();
     }
 
+    public function getAssetInfo(string $asset)
+    {
+        return $this->getActiveService()->getAssetInfo($asset);
+    }
+
     public function withdraw(string $asset, int $balanceToWithdraw, string $addressToWithdrawTo, string $tag = null): CompletedWithdraw
     {
         try {
@@ -103,7 +108,9 @@ class WithdrawService
         // Return configured address by asset.
         foreach ($this->addressProviders as $addressProvider) {
             try {
-                return $addressProvider->provide();
+                if ($addressProvider->getAsset() == $assetToWithdraw) {
+                    return $addressProvider->provide();
+                }
             } catch (\Throwable $exception) {
                 // allowed to fail
             }

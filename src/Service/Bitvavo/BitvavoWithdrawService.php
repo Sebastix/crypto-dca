@@ -63,6 +63,11 @@ class BitvavoWithdrawService implements WithdrawServiceInterface
         return 'bitvavo' === $exchange;
     }
 
+    public function getAssetInfo(string $asset)
+    {
+        // TODO: Implement this
+    }
+
     public function getWithdrawFee(string $asset, int $amountToWithdraw, string $addressToWithdrawTo): int
     {
       // TODO: Implement getWithdrawFee() method.

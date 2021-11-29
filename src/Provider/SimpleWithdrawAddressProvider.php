@@ -23,4 +23,10 @@ class SimpleWithdrawAddressProvider implements WithdrawAddressProviderInterface
 
     return $this->configuredAddress;
   }
+
+  //TODO: fix this
+  public function getAsset(): string
+  {
+    return "";
+  }
 }
